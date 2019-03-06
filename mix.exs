@@ -38,6 +38,7 @@ defmodule Links.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:plug_cowboy, "~> 1.0"},
+      {:distillery, "~> 2.0"},
       {:parttrans_engine, path: "../parttrans_engine"}
     ]
   end
