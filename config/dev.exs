@@ -12,7 +12,20 @@ config :links, LinksWeb.Endpoint,
   code_reloader: true,
   check_origin: false,
   watchers: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin",
-                    cd: Path.expand("../assets", __DIR__)]]
+                    cd: Path.expand("../assets", __DIR__)]],
+  url: [host: "localhost"],
+  secret_key_base: "Cmj6dw5IQmdf5DKNAlCPqUmMsHvcsvOnoVWRF9UnIGUq2cMpKImlyo+W+G4hjK7u",
+  render_errors: [view: LinksWeb.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: Links.PubSub,
+            adapter: Phoenix.PubSub.PG2],
+  live_reload: [
+    patterns: [
+      ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
+      ~r{priv/gettext/.*(po)$},
+      ~r{lib/links_web/views/.*(ex)$},
+      ~r{lib/links_web/templates/.*(eex)$}
+    ]
+  ]
 
 # ## SSL Support
 #
@@ -29,17 +42,6 @@ config :links, LinksWeb.Endpoint,
 # If desired, both `http:` and `https:` keys can be
 # configured to run both http and https servers on
 # different ports.
-
-# Watch static and templates for browser reloading.
-config :links, LinksWeb.Endpoint,
-  live_reload: [
-    patterns: [
-      ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
-      ~r{priv/gettext/.*(po)$},
-      ~r{lib/links_web/views/.*(ex)$},
-      ~r{lib/links_web/templates/.*(eex)$}
-    ]
-  ]
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"

@@ -5,22 +5,10 @@
 # is restricted to this project.
 use Mix.Config
 
-# Configures the endpoint
-config :links, LinksWeb.Endpoint,
-  url: [host: "localhost"],
-  secret_key_base: "Cmj6dw5IQmdf5DKNAlCPqUmMsHvcsvOnoVWRF9UnIGUq2cMpKImlyo+W+G4hjK7u",
-  render_errors: [view: LinksWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Links.PubSub,
-           adapter: Phoenix.PubSub.PG2]
-
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:user_id]
-
-# Import environment specific config. This must remain at the bottom
-# of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
 
 config :moebius, connection: [
   hostname: "localhost",
@@ -28,3 +16,13 @@ config :moebius, connection: [
   password: "srkijevo",
   database: "links_repo"
 ], scripts: "test/db"
+
+# config :exredis,
+#   host: "127.0.0.1",
+#   port: 6379,
+#   password: "",
+#   db: 0
+
+# Import environment specific config. This must remain at the bottom
+# of this file so it overrides the configuration defined above.
+import_config "#{Mix.env}.exs"

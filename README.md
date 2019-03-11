@@ -1,19 +1,14 @@
 # Links
 
-To start your Phoenix server:
+## Build for release
 
-  * Install dependencies with `mix deps.get`
-  * Install Node.js dependencies with `cd assets && npm install`
-  * Start Phoenix endpoint with `mix phx.server`
+To build for a release, run the following commands from the root directory:
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+* `docker build -t elixir-ubuntu:latest .`
+* `docker run -v $(pwd):/opt/build --rm -it elixir-ubuntu:latest /opt/build/bin/build`
 
-Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
+## Deploy
 
-## Learn more
+To deploy, `scp` the tarball to the server, `scp _build/docker/rel/links-0.1.0.tar.gz <your username>@<production server domain>:<target directory>`
 
-  * Official website: http://www.phoenixframework.org/
-  * Guides: http://phoenixframework.org/docs/overview
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+Then, unpack the tarball and start the process, `rm -rf /var/www/links/ && mkdir /var/www/links && tar -xzf links-0.1.0.tar.gz -C /var/www/links`

@@ -26,3 +26,6 @@ npm-debug.log
 # variables.
 /config/*.secret.exs
 .elixir_ls
+rel/
+.hex/
+.mix/

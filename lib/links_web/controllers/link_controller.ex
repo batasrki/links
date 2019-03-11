@@ -1,7 +1,7 @@
 defmodule LinksWeb.LinkController do
   require Logger
   use LinksWeb, :controller
-  alias ParttransEngine.LinkDisplayer
+  alias Links.LinkDisplayer
 
   def index(conn, params) do
     atom_params = for {key, val} <- params, key_in_whitelist?(key), into: %{}, do: {String.to_existing_atom(key), val}
