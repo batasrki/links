@@ -7,6 +7,12 @@ defmodule Links.RedisRepo do
     {:ok, client}
   end
 
+  def list_recent(key, from_timestamp) do
+    Process.whereis(:particle_transporter)
+    |> Exredis.Api.zrangebyscore(key, from_timestamp, "+inf")
+    |> Enum.map(fn item -> Poison.Parser.parse!(item) end)
+  end
+
   def list(per_page, 1) do
     Logger.info("Per page: #{inspect(per_page)}")
     from_store(0, per_page - 1)
@@ -16,9 +22,11 @@ defmodule Links.RedisRepo do
     start_index = (page - 1) * per_page
     end_index = start_index + (per_page - 1)
     Logger.info("start_index: #{start_index}; end_index: #{end_index}")
+
     cond do
       end_index > max_count() ->
         from_store(start_index, max_count())
+
       true ->
         from_store(start_index, end_index)
     end
@@ -27,7 +35,7 @@ defmodule Links.RedisRepo do
   defp from_store(start_index, end_index) do
     Process.whereis(:particle_transporter)
     |> Exredis.Api.zrange("posted:urls", start_index, end_index)
-    |> Enum.map(fn(item) -> Poison.Parser.parse!(item) end)
+    |> Enum.map(fn item -> Poison.Parser.parse!(item) end)
   end
 
   defp max_count() do

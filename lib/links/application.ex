@@ -10,8 +10,8 @@ defmodule Links.Application do
     children = [
       # Start the endpoint when the application starts
       supervisor(LinksWeb.Endpoint, []),
-      worker(Moebius.Db, [Moebius.get_connection]),
-      worker(Links.RedisRepo, [:particle_transporter, "redis://127.0.0.1:6379/0"]),
+      worker(Moebius.Db, [Moebius.get_connection()]),
+      worker(Links.RedisRepo, [:particle_transporter, "redis://127.0.0.1:6379/0"])
       # Start your own worker by calling: Links.Worker.start_link(arg1, arg2, arg3)
       # worker(Links.Worker, [arg1, arg2, arg3]),
     ]

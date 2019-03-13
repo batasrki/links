@@ -10,19 +10,15 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:user_id]
 
-config :moebius, connection: [
-  hostname: "localhost",
-  username: "srdjan",
-  password: "srkijevo",
-  database: "links_repo"
-], scripts: "test/db"
-
-# config :exredis,
-#   host: "127.0.0.1",
-#   port: 6379,
-#   password: "",
-#   db: 0
+config :moebius,
+  connection: [
+    hostname: "localhost",
+    username: "srdjan",
+    password: "srkijevo",
+    database: "links_repo"
+  ],
+  scripts: "test/db"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"
