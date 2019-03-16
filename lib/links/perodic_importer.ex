@@ -7,6 +7,10 @@ defmodule Links.PeriodicImporter do
     {:ok, pid}
   end
 
+  def init(opts) do
+    {:ok, opts}
+  end
+
   def perform(pid) do
     GenServer.cast(pid, :perform)
   end
@@ -15,5 +19,6 @@ defmodule Links.PeriodicImporter do
     # Links.Repo.
     last_added_at = NaiveDateTime.utc_now()
     Links.PostgresImporter.import(opts[:key], last_added_at)
+    {:noreply, :ok, opts}
   end
 end

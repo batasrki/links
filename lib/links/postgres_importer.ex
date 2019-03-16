@@ -6,7 +6,7 @@ defmodule Links.PostgresImporter do
   end
 
   def convert_timestamp(timestamp) do
-    DateTime.to_unix(timestamp)
+    DateTime.from_naive!(timestamp, "Etc/UTC") |> DateTime.to_unix()
   end
 
   def fetch_redis_records(key, from_timestamp) do
