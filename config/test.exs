@@ -8,3 +8,13 @@ config :links, LinksWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+# TODO add Redis connection here
+
+config :moebius,
+  connection: [
+    hostname: "localhost",
+    username: "srdjan",
+    password: "srkijevo",
+    database: "links_repo_test"
+  ]

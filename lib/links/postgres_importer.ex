@@ -1,4 +1,6 @@
 defmodule Links.PostgresImporter do
+  alias __MODULE__
+
   def convert_timestamp(nil) do
     "-inf"
   end
@@ -9,5 +11,14 @@ defmodule Links.PostgresImporter do
 
   def fetch_redis_records(key, from_timestamp) do
     Links.RedisRepo.list_recent(key, convert_timestamp(from_timestamp))
+  end
+
+  def persist_records(redis_records) do
+    Links.Repo.batch_save!(redis_records)
+  end
+
+  def import(key, from_timestamp) do
+    fetch_redis_records(key, from_timestamp)
+    |> persist_records()
   end
 end
