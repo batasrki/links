@@ -2,22 +2,33 @@ defmodule Links.LinkDisplayer do
   alias Links.Repo
 
   def to_list(pagination_config) do
-    sort_direction = Map.get(pagination_config, :sort_direction, :asc)
-    archived = convert_from(pagination_config, :archived)
-    per_page = convert_from(pagination_config, :per_page)
-    page = convert_from(pagination_config, :page)
+    filter_pagination_config = %{
+      sort_direction: Map.get(pagination_config, :sort_direction, :asc)
+    }
 
-    Repo.list(
-      sort_direction,
-      archived,
-      per_page,
-      page
-    )
+    filter_pagination_config =
+      Map.put(
+        filter_pagination_config,
+        :archived,
+        convert_from(pagination_config, :archived)
+      )
+
+    filter_pagination_config =
+      Map.put(
+        filter_pagination_config,
+        :per_page,
+        convert_from(pagination_config, :per_page)
+      )
+
+    filter_pagination_config =
+      Map.put(filter_pagination_config, :page, convert_from(pagination_config, :page))
+
+    Repo.list(filter_pagination_config)
   end
 
   defp convert_from(pagination_config, :archived) do
     case Map.fetch(pagination_config, :archived) do
-      :error -> false
+      :error -> nil
       {:ok, val} -> String.to_existing_atom(val)
     end
   end
@@ -31,7 +42,7 @@ defmodule Links.LinkDisplayer do
   end
 
   def to_list() do
-    Repo.list()
+    Repo.list(%{})
   end
 
   def to_json_list(params) do

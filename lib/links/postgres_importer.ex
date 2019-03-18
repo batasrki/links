@@ -10,7 +10,7 @@ defmodule Links.PostgresImporter do
   end
 
   def fetch_redis_records(key, from_timestamp) do
-    Links.RedisRepo.list_recent(key, convert_timestamp(from_timestamp))
+    tl(Links.RedisRepo.list_recent(key, convert_timestamp(from_timestamp)))
   end
 
   def persist_records(redis_records) do
