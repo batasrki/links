@@ -3,8 +3,9 @@ defmodule LinksWeb.LinkView do
 
   def archived?(link) do
     case link.archive do
-      false -> ""
       true -> "border border-danger"
+      false -> ""
+      nil -> ""
     end
   end
 end

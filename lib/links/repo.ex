@@ -30,30 +30,36 @@ defmodule Links.Repo do
   def list(filter_pagination_config) do
     query = Query.db(:links) |> Query.sort(:added_at, filter_pagination_config[:sort_direction])
 
-    query =
-      if Map.has_key?(filter_pagination_config, :per_page) do
-        query
-        |> Query.limit(filter_pagination_config[:per_page])
-        |> Query.skip((filter_pagination_config[:page] - 1) * filter_pagination_config[:per_page])
-      else
-        query
-      end
+    query = paginate(query, filter_pagination_config)
 
-    query =
-      if Map.has_key?(filter_pagination_config, :archived) do
-        query |> Query.filter(archive: filter_pagination_config[:archived])
-      else
-        query
-      end
+    query = filter(query, filter_pagination_config)
 
     # Debugging code
-    # query = Query.select(query)
-    # IO.inspect(query.sql)
-    # IO.inspect(filter_pagination_config)
+    query = Query.select(query)
+    IO.inspect(query.sql)
+    IO.inspect(filter_pagination_config)
 
     {:ok, result} = query |> Db.run()
 
     result
+  end
+
+  defp paginate(query, %{per_page: per_page, page: page}) when is_number(per_page) do
+    query
+    |> Query.limit(per_page)
+    |> Query.skip((page - 1) * per_page)
+  end
+
+  defp paginate(query, _) do
+    query
+  end
+
+  defp filter(query, %{archived: archived}) when is_boolean(archived) do
+    query |> Query.filter(archive: archived)
+  end
+
+  defp filter(query, _) do
+    query
   end
 
   def batch_save!(redis_list) do
