@@ -1,30 +1,13 @@
 defmodule Links.TestPostgresImporter do
   use ExUnit.Case
   import Exredis.Api
-  alias Links.{PostgresImporter, RedisRepo, Repo}
+  alias Links.{PostgresImporter, Repo}
 
-  @repo nil
   @key "test:set"
-
-  setup_all do
-    case Enum.find(Process.registered(), fn name -> name == :particle_transporter end) do
-      nil ->
-        :ok
-
-      _ ->
-        IO.puts("unregistering #{IO.inspect(Process.whereis(:particle_transporter))}")
-        Process.unregister(:particle_transporter)
-        :ok
-    end
-
-    {:ok, pid} = RedisRepo.start_link(:particle_transporter, "redis://127.0.0.1:6379/10")
-    @repo = pid
-    :ok
-  end
 
   setup do
     on_exit(fn ->
-      @repo |> del(@key)
+      Process.whereis(:particle_transporter) |> del(@key)
       Moebius.Query.db(:links) |> Moebius.Query.delete() |> Moebius.Db.run()
     end)
   end
@@ -44,8 +27,11 @@ defmodule Links.TestPostgresImporter do
     {:ok, test_timestamp} = DateTime.from_naive(~N[2018-10-20 19:48:06.000000], "Etc/UTC")
     {:ok, test1_timestamp} = DateTime.from_naive(~N[2018-10-22 19:48:06.000000], "Etc/UTC")
 
-    @repo |> zadd(@key, DateTime.to_unix(test_timestamp), "{\"val\": \"test\"}")
-    @repo |> zadd(@key, DateTime.to_unix(test1_timestamp), "{\"val\": \"test 1\"}")
+    Process.whereis(:particle_transporter)
+    |> zadd(@key, DateTime.to_unix(test_timestamp), "{\"val\": \"test\"}")
+
+    Process.whereis(:particle_transporter)
+    |> zadd(@key, DateTime.to_unix(test1_timestamp), "{\"val\": \"test 1\"}")
 
     {:ok, timestamp} = DateTime.from_naive(~N[2018-10-13 19:48:06.000000], "Etc/UTC")
 
@@ -59,8 +45,11 @@ defmodule Links.TestPostgresImporter do
     {:ok, test_timestamp} = DateTime.from_naive(~N[2018-10-20 19:48:06.000000], "Etc/UTC")
     {:ok, test1_timestamp} = DateTime.from_naive(~N[2018-10-22 19:48:06.000000], "Etc/UTC")
 
-    @repo |> zadd(@key, DateTime.to_unix(test_timestamp), "{\"val\": \"test\"}")
-    @repo |> zadd(@key, DateTime.to_unix(test1_timestamp), "{\"val\": \"test 1\"}")
+    Process.whereis(:particle_transporter)
+    |> zadd(@key, DateTime.to_unix(test_timestamp), "{\"val\": \"test\"}")
+
+    Process.whereis(:particle_transporter)
+    |> zadd(@key, DateTime.to_unix(test1_timestamp), "{\"val\": \"test 1\"}")
 
     assert PostgresImporter.fetch_redis_records(@key, nil) == [
              %{"val" => "test"},
@@ -79,21 +68,21 @@ defmodule Links.TestPostgresImporter do
 
     PostgresImporter.persist_records([redis_record])
 
-    assert Enum.count(Repo.list()) == 1
+    assert Enum.count(Repo.list(%{sort_direction: :asc})) == 1
   end
 
   test "it works end to end with nil timestamp" do
     {:ok, test_timestamp} = DateTime.from_naive(~N[2018-10-20 19:48:06.000000], "Etc/UTC")
     {:ok, test1_timestamp} = DateTime.from_naive(~N[2018-10-22 19:48:06.000000], "Etc/UTC")
 
-    @repo
+    Process.whereis(:particle_transporter)
     |> zadd(
       @key,
       DateTime.to_unix(test_timestamp),
       "{\"url\": \"https://example.org\", \"client\": \"heimdall\", \"title\": \"Example link\", \"archive\": false, \"timestamp\": 1535236965}"
     )
 
-    @repo
+    Process.whereis(:particle_transporter)
     |> zadd(
       @key,
       DateTime.to_unix(test1_timestamp),
@@ -101,6 +90,6 @@ defmodule Links.TestPostgresImporter do
     )
 
     PostgresImporter.import(@key, nil)
-    assert Enum.count(Repo.list()) == 2
+    assert Enum.count(Repo.list(%{sort_direction: :asc})) == 2
   end
 end

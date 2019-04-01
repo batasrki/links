@@ -11,7 +11,7 @@ defmodule Links.Application do
       # Start the endpoint when the application starts
       supervisor(LinksWeb.Endpoint, []),
       worker(Moebius.Db, [Moebius.get_connection()]),
-      worker(Links.RedisRepo, [:particle_transporter, "redis://127.0.0.1:6379/0"]),
+      worker(Links.RedisRepo, [:particle_transporter]),
       worker(Links.PeriodicImporter, [[interval: 1_440_000, key: "posted:urls"]])
       # Start your own worker by calling: Links.Worker.start_link(arg1, arg2, arg3)
       # worker(Links.Worker, [arg1, arg2, arg3]),

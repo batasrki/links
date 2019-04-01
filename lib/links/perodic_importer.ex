@@ -16,10 +16,18 @@ defmodule Links.PeriodicImporter do
   end
 
   def handle_cast(:perform, opts) do
-    last_added_at_record =
-      hd(Links.Repo.by_last_added_at(%{sort_direction: :desc, per_page: 1, page: 1}))
+    last_added_at_records =
+      Links.Repo.by_last_added_at(%{sort_direction: :desc, per_page: 1, page: 1})
 
-    Links.PostgresImporter.import(opts[:key], last_added_at_record.added_at)
+    import_with_timestamp(opts[:key], last_added_at_records)
     {:noreply, :ok, opts}
+  end
+
+  defp import_with_timestamp(key, []) do
+    Links.PostgresImporter.import(key, nil)
+  end
+
+  defp import_with_timestamp(key, records) do
+    Links.PostgresImporter.import(key, hd(records).added_at)
   end
 end

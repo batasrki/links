@@ -9,7 +9,10 @@ config :links, LinksWeb.Endpoint,
 # Print only warnings and errors during test
 config :logger, level: :warn
 
-# TODO add Redis connection here
+config :exredis,
+  url: "redis://127.0.0.1:6379/10",
+  reconnect: :no_reconnect,
+  max_queue: :infinity
 
 config :moebius,
   connection: [

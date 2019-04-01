@@ -1,8 +1,8 @@
 defmodule Links.RedisRepo do
   require Logger
 
-  def start_link(name, uri) do
-    client = Exredis.start_using_connection_string(uri)
+  def start_link(name) do
+    {:ok, client} = Exredis.start_link()
     true = Process.register(client, name)
     {:ok, client}
   end

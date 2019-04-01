@@ -25,6 +25,7 @@ defmodule Links.Mixfile do
         :moebius,
         :exredis,
         :poison,
+        :phoenix_html,
         :phoenix
       ],
       extra_applications: [:logger, :runtime_tools]

@@ -35,9 +35,9 @@ defmodule Links.Repo do
     query = filter(query, filter_pagination_config)
 
     # Debugging code
-    query = Query.select(query)
-    IO.inspect(query.sql)
-    IO.inspect(filter_pagination_config)
+    # query = Query.select(query)
+    # IO.inspect(query.sql)
+    # IO.inspect(filter_pagination_config)
 
     {:ok, result} = query |> Db.run()
 
@@ -86,6 +86,7 @@ defmodule Links.Repo do
       url: item["url"],
       added_at: added_at,
       archive: item["archive"],
+      client: item["client"],
       inserted_at: NaiveDateTime.utc_now(),
       updated_at: NaiveDateTime.utc_now()
     ]
