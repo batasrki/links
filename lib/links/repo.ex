@@ -88,7 +88,7 @@ defmodule Links.Repo do
       archive: item["archive"],
       client: item["client"],
       inserted_at: NaiveDateTime.utc_now(),
-      updated_at: NaiveDateTime.utc_now()
+      created_at: NaiveDateTime.utc_now()
     ]
   end
 end
