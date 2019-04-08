@@ -44,6 +44,16 @@ defmodule Links.Repo do
     result
   end
 
+  def find_by_url(url) do
+    {:ok, result} =
+      Query.db(:links)
+      |> Query.filter(url: url)
+      |> Query.limit(1)
+      |> Db.run()
+
+    result
+  end
+
   defp paginate(query, %{per_page: per_page, page: page}) when is_number(per_page) do
     query
     |> Query.limit(per_page)
@@ -88,7 +98,7 @@ defmodule Links.Repo do
       archive: item["archive"],
       client: item["client"],
       inserted_at: NaiveDateTime.utc_now(),
-      created_at: NaiveDateTime.utc_now()
+      updated_at: NaiveDateTime.utc_now()
     ]
   end
 end

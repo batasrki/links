@@ -72,6 +72,52 @@ defmodule Links.TestPostgresImporter do
   end
 
   test "it works end to end with nil timestamp" do
+    save_to_redis()
+
+    PostgresImporter.import(@key, nil)
+    assert Enum.count(Repo.list(%{sort_direction: :asc})) == 2
+  end
+
+  test "it works end to end with non-nil timestamp" do
+    save_to_redis()
+
+    Repo.batch_save!([
+      %{
+        "url" => "https://example.org/",
+        "client" => "test_client",
+        "title" => "Example link",
+        "archive" => false,
+        "timestamp" => 1_540_151_286
+      }
+    ])
+
+    PostgresImporter.import(@key, ~N[2018-10-21 19:48:06.000000])
+    record = hd(Repo.by_last_added_at(%{sort_direction: :desc, per_page: 1, page: 1}))
+    assert "https://test.example.org", record.url
+  end
+
+  test "it doesn't save the record if there's one already saved" do
+    save_to_redis()
+
+    Repo.batch_save!([
+      %{
+        "url" => "https://test.example.org/",
+        "client" => "test_client",
+        "title" => "Example link",
+        "archive" => false,
+        "timestamp" => 1_540_237_686
+      }
+    ])
+
+    PostgresImporter.import(@key, ~N[2018-10-22 19:48:06.000000])
+    PostgresImporter.import(@key, ~N[2018-10-22 19:48:06.000000])
+    records = Repo.list(%{sort_direction: :desc, per_page: 10, page: 1})
+    urls = Enum.map(records, fn record -> record.url end)
+    assert ["https://test.example.org", "https://example.org"], urls
+    assert Enum.count(Repo.list(%{sort_direction: :asc})) == 2
+  end
+
+  defp save_to_redis() do
     {:ok, test_timestamp} = DateTime.from_naive(~N[2018-10-20 19:48:06.000000], "Etc/UTC")
     {:ok, test1_timestamp} = DateTime.from_naive(~N[2018-10-22 19:48:06.000000], "Etc/UTC")
 
@@ -86,10 +132,7 @@ defmodule Links.TestPostgresImporter do
     |> zadd(
       @key,
       DateTime.to_unix(test1_timestamp),
-      "{\"url\": \"https://example.org\", \"client\": \"heimdall\", \"title\": \"Example link\", \"archive\": false, \"timestamp\": 1535236966}"
+      "{\"url\": \"https://test.example.org\", \"client\": \"heimdall\", \"title\": \"Example link\", \"archive\": false, \"timestamp\": 1535236966}"
     )
-
-    PostgresImporter.import(@key, nil)
-    assert Enum.count(Repo.list(%{sort_direction: :asc})) == 2
   end
 end

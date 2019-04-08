@@ -20,7 +20,7 @@ defmodule Links.PeriodicImporter do
       Links.Repo.by_last_added_at(%{sort_direction: :desc, per_page: 1, page: 1})
 
     import_with_timestamp(opts[:key], last_added_at_records)
-    {:noreply, :ok, opts}
+    {:noreply, opts}
   end
 
   defp import_with_timestamp(key, []) do
