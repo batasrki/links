@@ -35,9 +35,12 @@ defmodule Links.Repo do
     query = filter(query, filter_pagination_config)
 
     # Debugging code
-    # query = Query.select(query)
-    # IO.inspect(query.sql)
-    # IO.inspect(filter_pagination_config)
+    query = Query.select(query)
+    Logger.info(query.sql)
+
+    Logger.info(
+      Enum.join(Enum.map(filter_pagination_config, fn {k, v} -> "#{k} => #{v}" end), "; ")
+    )
 
     {:ok, result} = query |> Db.run()
 
