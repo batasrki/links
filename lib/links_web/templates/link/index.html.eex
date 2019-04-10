@@ -1,21 +1,15 @@
 <section class="col-xs-12">
   <h3>Stored URLs</h3>
+  <ul class="nav nav-pills">
+    <li class="nav-item">
+      <a class="nav-link" href="<%= link_path(@conn, :index) %>?sort_direction=asc">Oldest first</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="<%= link_path(@conn, :index) %>?sort_direction=desc">Newest first</a>
+    </li>
+  </ul>
   <%= form_for @conn, link_path(@conn, :index), [method: :get], fn f -> %>
-    <ul class="nav">
-      <li class="nav-item">
-        <label name="sort_direction">
-          <input type="radio" name="sort_direction" value="asc" />
-          Oldest first
-        </label>
-        <label name="sort_direction">
-          <input type="radio" name="sort_direction" value="desc"/>
-          Newest first
-        </label>
-      </li>
-      <li class="nav-item">
-        <%= select f, :per_page, ["All": nil, "10": 10, "20": 20, "50": 50] %>
-      </li>
-    </ul>
+    <%= select f, :per_page, ["All": nil, "10": 10, "20": 20, "50": 50] %>
     <%= submit "Configure" %>
   <% end %>
   <%= for posted <- @links do %>
