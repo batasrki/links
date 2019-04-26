@@ -7,17 +7,33 @@
     <li class="nav-item">
       <a class="nav-link" href="<%= link_path(@conn, :index) %>?sort_direction=desc">Newest first</a>
     </li>
+    <li class="nav-item">
+      <a class="nav-link" href="<%= link_path(@conn, :index) %>">All</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="<%= link_path(@conn, :index) %>?per_page=10&page=1">10</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="<%= link_path(@conn, :index) %>?per_page=20&page=1">20</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="<%= link_path(@conn, :index) %>?per_page=50&page=1">50</a>
+    </li>
+<!--    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Display</a>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="<%= link_path(@conn, :index) %>?per_page=10&page=1">10</a>
+        <a class="dropdown-item" href="<%= link_path(@conn, :index) %>?per_page=20&page=1">20</a>
+        <a class="dropdown-item" href="<%= link_path(@conn, :index) %>?per_page=50&page=1">50</a>
+      </div>
+    </li> -->
   </ul>
-  <%= form_for @conn, link_path(@conn, :index), [method: :get], fn f -> %>
-    <%= select f, :per_page, ["All": nil, "10": 10, "20": 20, "50": 50] %>
-    <%= submit "Configure" %>
-  <% end %>
   <%= for posted <- @links do %>
     <div class="row">
       <%= for link <- posted do %>
         <div class="card col-xs-3 m-3 <%= archived?(link) %>">
           <div class="card-body">
-            <h4 class="card-titl3">
+            <h4 class="card-title">
               <a target="_blank" href="<%= link.url %>"><%= link.title %></a>
             </h4>
             <div class="card-text">

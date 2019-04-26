@@ -4,13 +4,19 @@ defmodule LinksWeb.LinkController do
   alias Links.LinkDisplayer
 
   def index(conn, params) do
+    previous_config_params = get_session(conn, :config_params) || %{}
+
     atom_params =
       for {key, val} <- params,
           key_in_whitelist?(key),
           into: %{},
           do: {String.to_existing_atom(key), val}
 
-    render(conn, "index.html", links: Enum.chunk_every(LinkDisplayer.to_list(atom_params), 3))
+    conn = put_session(conn, :config_params, Map.merge(previous_config_params, atom_params))
+
+    render(conn, "index.html",
+      links: Enum.chunk_every(LinkDisplayer.to_list(get_session(conn, :config_params)), 3)
+    )
   end
 
   defp key_in_whitelist?(key) do

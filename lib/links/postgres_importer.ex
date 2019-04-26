@@ -1,4 +1,6 @@
 defmodule Links.PostgresImporter do
+  require Logger
+
   def convert_timestamp(nil) do
     "-inf"
   end
@@ -8,7 +10,10 @@ defmodule Links.PostgresImporter do
   end
 
   def fetch_redis_records(key, from_timestamp) do
-    Links.RedisRepo.list_recent(key, convert_timestamp(from_timestamp))
+    records = Links.RedisRepo.list_recent(key, convert_timestamp(from_timestamp))
+    Logger.info("Fetching records with #{convert_timestamp(from_timestamp)} under #{key} key.")
+    Logger.info("Found #{Enum.count(records)} records.")
+    records
   end
 
   def persist_records(redis_records) do
