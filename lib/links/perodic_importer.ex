@@ -1,8 +1,10 @@
 defmodule Links.PeriodicImporter do
   use GenServer
+  require Logger
 
   def start_link(opts) do
     {:ok, pid} = GenServer.start_link(__MODULE__, opts)
+    Logger.info("Starting #{__MODULE__}")
     :timer.apply_interval(opts[:interval], __MODULE__, :perform, [pid])
     {:ok, pid}
   end
@@ -24,10 +26,13 @@ defmodule Links.PeriodicImporter do
   end
 
   defp import_with_timestamp(key, []) do
+    Logger.info("Importing all Redis records")
     Links.PostgresImporter.import(key, nil)
   end
 
   defp import_with_timestamp(key, records) do
-    Links.PostgresImporter.import(key, hd(records).added_at)
+    last_added_timestamp = hd(records).added_at
+    Logger.info("Looking for records newer than #{last_added_timestamp}")
+    Links.PostgresImporter.import(key, last_added_timestamp)
   end
 end
