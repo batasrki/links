@@ -4,7 +4,8 @@ use Mix.Config
 # you can enable the server option below.
 config :links, LinksWeb.Endpoint,
   http: [port: 4001],
-  server: false
+  server: false,
+  secret_key_base: "Qd+FSVTkEq1L+qxuO6pKTFzZ9jb4ho94F7ZJGmNfvtz9okdCTvpiga9aGVAVDzbs"
 
 # Print only warnings and errors during test
 config :logger, level: :warn
