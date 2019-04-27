@@ -18,21 +18,21 @@ defmodule Links.PeriodicImporter do
   end
 
   def handle_cast(:perform, opts) do
-    last_added_at_records =
+    most_recent_records =
       Links.Repo.by_last_added_at(%{sort_direction: :desc, per_page: 1, page: 1})
 
-    import_with_timestamp(opts[:key], last_added_at_records)
+    import_from_last_added_record(opts[:key], most_recent_records)
     {:noreply, opts}
   end
 
-  defp import_with_timestamp(key, []) do
+  defp import_from_last_added_record(key, []) do
     Logger.info("Importing all Redis records")
     Links.PostgresImporter.import(key, nil)
   end
 
-  defp import_with_timestamp(key, records) do
-    last_added_timestamp = hd(records).added_at
-    Logger.info("Looking for records newer than #{last_added_timestamp}")
-    Links.PostgresImporter.import(key, last_added_timestamp)
+  defp import_from_last_added_record(key, records) do
+    last_added_record = hd(records)
+    Logger.info("Looking for records newer than #{last_added_record.added_at}")
+    Links.PostgresImporter.import(key, last_added_record)
   end
 end

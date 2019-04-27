@@ -12,11 +12,6 @@ defmodule Links.TestPostgresImporter do
     end)
   end
 
-  test "convert null timestamp to '-inf'" do
-    timestamp = nil
-    assert PostgresImporter.convert_timestamp(timestamp) == "-inf"
-  end
-
   test "convert a datetime record to a Unix timestamp" do
     {:ok, timestamp} = DateTime.from_naive(~N[2018-10-13 19:48:06.000000], "Etc/UTC")
     converted_timestamp = DateTime.to_unix(timestamp)
@@ -35,7 +30,9 @@ defmodule Links.TestPostgresImporter do
 
     {:ok, timestamp} = DateTime.from_naive(~N[2018-10-13 19:48:06.000000], "Etc/UTC")
 
-    assert PostgresImporter.fetch_redis_records(@key, timestamp) == [
+    existing_record = %{added_at: timestamp}
+
+    assert PostgresImporter.fetch_redis_records(@key, existing_record) == [
              %{"val" => "test"},
              %{"val" => "test 1"}
            ]
@@ -66,7 +63,7 @@ defmodule Links.TestPostgresImporter do
       "timestamp" => 1_535_236_965
     }
 
-    PostgresImporter.persist_records([redis_record])
+    PostgresImporter.persist_records([redis_record], nil)
 
     assert Enum.count(Repo.list(%{sort_direction: :asc})) == 1
   end
@@ -91,30 +88,14 @@ defmodule Links.TestPostgresImporter do
       }
     ])
 
-    PostgresImporter.import(@key, ~N[2018-10-21 19:48:06.000000])
+    existing_record = %{
+      added_at: ~N[2018-10-21 19:48:06.000000],
+      url: "https://testing.example.org"
+    }
+
+    PostgresImporter.import(@key, existing_record)
     record = hd(Repo.by_last_added_at(%{sort_direction: :desc, per_page: 1, page: 1}))
     assert "https://test.example.org", record.url
-  end
-
-  test "it doesn't save the record if there's one already saved" do
-    save_to_redis()
-
-    Repo.batch_save!([
-      %{
-        "url" => "https://test.example.org/",
-        "client" => "test_client",
-        "title" => "Example link",
-        "archive" => false,
-        "timestamp" => 1_540_237_686
-      }
-    ])
-
-    PostgresImporter.import(@key, ~N[2018-10-22 19:48:06.000000])
-    PostgresImporter.import(@key, ~N[2018-10-22 19:48:06.000000])
-    records = Repo.list(%{sort_direction: :desc, per_page: 10, page: 1})
-    urls = Enum.map(records, fn record -> record.url end)
-    assert ["https://test.example.org", "https://example.org"], urls
-    assert Enum.count(Repo.list(%{sort_direction: :asc})) == 2
   end
 
   defp save_to_redis() do
