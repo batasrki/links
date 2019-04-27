@@ -18,7 +18,7 @@ defmodule Links.PostgresImporter do
 
   def persist_records(redis_records) do
     redis_records
-    |> Stream.take_while(fn record -> Enum.empty?(Links.Repo.find_by_url(record["url"])) end)
+    |> Stream.filter(fn record -> Enum.empty?(Links.Repo.find_by_url(record["url"])) end)
     |> Links.Repo.batch_save!()
   end
 
