@@ -1,8 +1,8 @@
 defmodule LinksWeb.ApiController do
   use LinksWeb, :controller
-  alias Links.LinkDisplayer
+  alias Links.LinkReader
 
   def index(conn, _params) do
-    json(conn, LinkDisplayer.to_list())
+    json(conn, LinkReader.to_list())
   end
 end

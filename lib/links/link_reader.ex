@@ -1,4 +1,4 @@
-defmodule Links.LinkDisplayer do
+defmodule Links.LinkReader do
   alias Links.Repo
 
   def to_list(pagination_config) do
@@ -47,5 +47,14 @@ defmodule Links.LinkDisplayer do
 
   def to_json_list(params) do
     to_list(params) |> Poison.encode!()
+  end
+
+  def by_id(id) do
+    result = Repo.find_by_id(String.to_integer(id))
+
+    case result do
+      [] -> nil
+      _ -> hd(result)
+    end
   end
 end

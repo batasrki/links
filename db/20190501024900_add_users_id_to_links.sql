@@ -1,0 +1,2 @@
+ALTER TABLE links
+ADD COLUMN users_id INTEGER REFERENCES users(id);

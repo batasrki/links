@@ -1,6 +1,5 @@
 # App artifacts
 /_build
-/db
 /deps
 /*.ez
 
@@ -29,3 +28,4 @@ npm-debug.log
 rel/
 .hex/
 .mix/
+links.code-workspace

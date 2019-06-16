@@ -57,6 +57,15 @@ defmodule Links.Repo do
     result
   end
 
+  def find_by_id(id) do
+    {:ok, result} =
+      Query.db(:links)
+      |> Query.filter(id: id)
+      |> Db.run()
+
+    result
+  end
+
   defp paginate(query, %{per_page: per_page, page: page}) when is_number(per_page) do
     query
     |> Query.limit(per_page)
@@ -91,8 +100,36 @@ defmodule Links.Repo do
     end
   end
 
+  def update(id, params) do
+    prepared_item = list_from_map(params)
+
+    query =
+      Query.db(:links)
+      |> Query.filter(id: id)
+      |> Query.update(prepared_item)
+
+    query |> Db.run()
+  end
+
+  def create(params) do
+    prepared_item = list_from_map(params)
+
+    query =
+      Query.db(:links)
+      |> Query.insert(prepared_item)
+
+    query |> Db.run()
+  end
+
   def list_from_map(item) do
-    added_at = DateTime.from_unix!(item["timestamp"]) |> DateTime.to_naive()
+    added_at =
+      cond do
+        item["timestamp"] != nil ->
+          DateTime.from_unix!(item["timestamp"]) |> DateTime.to_naive()
+
+        item["added_at"] != nil ->
+          item["added_at"]
+      end
 
     [
       title: item["title"],

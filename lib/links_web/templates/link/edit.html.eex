@@ -1,0 +1,27 @@
+<section class="col-md-8">
+    <h3><%= @link.title %></h3>
+    <ul class="nav nav-pills">
+        <li class="nav-item"><a class="nav-link" href="<%= link_path(@conn, :index) %>">Index</a></li>
+    </ul>
+    <%= form_for @conn, link_path(@conn, :update, @link.id), [method: :put], fn f -> %>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="title">Title</label>
+                <%= text_input f, :title, value: @link.title, class: "form-control" %>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="client">Client</label>
+                <%= text_input f, :client, value: @link.client, class: "form-control" %>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                <label for="url">URL</label>
+                <%= url_input f, :url, value: @link.url, class: "form-control" %>
+            </div>
+        </div>
+        
+        <%= submit "Update", class: "btn btn-primary col-md-2" %>
+        
+    <% end %>
+</section>
