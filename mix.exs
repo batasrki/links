@@ -51,6 +51,7 @@ defmodule Links.Mixfile do
       {:exredis, "~> 0.2.4"},
       {:moebius, "~>3.0.1"},
       {:poison, "~>3.0.0"},
+      {:httpoison, "~> 1.4"},
       {:dialyxir, "~> 1.0.0-rc.4", only: [:dev], runtime: false},
       {:phoenix_live_reload, "~> 1.2", only: :dev}
     ]
