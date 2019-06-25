@@ -25,6 +25,7 @@ defmodule Links.Mixfile do
         :moebius,
         :exredis,
         :poison,
+        :httpoison,
         :phoenix_html,
         :phoenix
       ],
