@@ -33,8 +33,13 @@ defmodule LinksWeb.LinkController do
     result = LinkMutator.update(link, Map.take(params, ["title", "client", "url"]))
 
     case result do
-      {:ok, _} -> redirect(conn, to: "/")
-      {:error, message} -> render(conn, "edit.html", link: link, errors: message)
+      {:ok, _} ->
+        redirect(conn, to: "/")
+
+      {:error, message} ->
+        conn
+        |> put_flash(:error, message)
+        |> render("edit.html", link: link)
     end
   end
 
@@ -42,8 +47,15 @@ defmodule LinksWeb.LinkController do
     result = LinkMutator.create(Map.take(params, ["title", "client", "url"]))
 
     case result do
-      {:ok, _} -> redirect(conn, to: "/")
-      {:error, message} -> render(conn, "index.html", errors: message)
+      {:ok, _} ->
+        redirect(conn, to: "/")
+
+      {:error, message} ->
+        conn
+        |> put_flash(:error, message)
+        |> render("index.html",
+          links: Enum.chunk_every(LinkReader.to_list(get_session(conn, :config_params)), 3)
+        )
     end
   end
 

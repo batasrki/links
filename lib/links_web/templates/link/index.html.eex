@@ -29,12 +29,10 @@
     </li> -->
   </ul>
 
+  <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
   <%= form_for @conn, link_path(@conn, :create), fn f -> %>
     <fieldset>
       <legend>Add a new link</legend>
-      <div class="form-row col-xs-2">
-        <%= text_input f, :title, class: "form-control col", placeholder: "Title" %>
-      </div>
       <div class="form-row col-xs-6">
         <%= url_input f, :url, class: "form-control col", placeholder: "URL"%>
       </div>

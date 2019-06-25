@@ -51,7 +51,7 @@ defmodule Links.Repo do
     {:ok, result} =
       Query.db(:links)
       |> Query.filter(url: url)
-      |> Query.limit(1)
+      # |> Query.limit(1)
       |> Db.run()
 
     result
@@ -113,6 +113,7 @@ defmodule Links.Repo do
 
   def create(params) do
     prepared_item = list_from_map(params)
+    prepared_item = prepared_item ++ [inserted_at: NaiveDateTime.utc_now()]
 
     query =
       Query.db(:links)
@@ -122,23 +123,19 @@ defmodule Links.Repo do
   end
 
   def list_from_map(item) do
-    added_at =
+    item =
       cond do
         item["timestamp"] != nil ->
-          DateTime.from_unix!(item["timestamp"]) |> DateTime.to_naive()
+          converted_timestamp = DateTime.from_unix!(item["timestamp"]) |> DateTime.to_naive()
+          item = Map.put(item, "added_at", converted_timestamp)
+          Map.delete(item, "timestamp")
 
-        item["added_at"] != nil ->
-          item["added_at"]
+        item["timestamp"] == nil ->
+          item
       end
 
-    [
-      title: item["title"],
-      url: item["url"],
-      added_at: added_at,
-      archive: item["archive"],
-      client: item["client"],
-      inserted_at: NaiveDateTime.utc_now(),
-      updated_at: NaiveDateTime.utc_now()
-    ]
+    initial_list = for {k, v} <- item, into: [], do: {String.to_existing_atom(k), v}
+
+    initial_list ++ [updated_at: NaiveDateTime.utc_now()]
   end
 end

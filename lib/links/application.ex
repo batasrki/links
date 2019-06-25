@@ -10,7 +10,8 @@ defmodule Links.Application do
     children = [
       # Start the endpoint when the application starts
       supervisor(LinksWeb.Endpoint, []),
-      worker(Moebius.Db, [Moebius.get_connection()])
+      worker(Moebius.Db, [Moebius.get_connection()]),
+      worker(Links.CrawlerService, [])
       # worker(Links.RedisRepo, [:particle_transporter]),
       # worker(Links.PeriodicImporter, [[interval: 1_440_000, key: "posted:urls"]])
       # Start your own worker by calling: Links.Worker.start_link(arg1, arg2, arg3)
