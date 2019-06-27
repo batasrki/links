@@ -11,6 +11,8 @@ defmodule Links.LinkTitleFetcher do
           Links.Repo.update(record.id, %{"title" => title})
         end)
 
+        LinksWeb.Endpoint.broadcast!("updates:*", "incoming", %{title: title})
+
       {:ok, %HTTPoison.Response{status_code: 301, headers: headers}} ->
         Logger.info("Following a 301 redirect for #{params["url"]}")
         follow_redirect_with(params, headers)
