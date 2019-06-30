@@ -24,9 +24,9 @@ config :links, LinksWeb.Endpoint,
   pubsub: [
     adapter: Phoenix.PubSub.PG2,
     pool_size: 1,
-    name: Links.PubSub,
-    check_origin: ["https://s2dd.ca", "https://www.s2dd.ca"]
-  ]
+    name: Links.PubSub
+  ],
+  check_origin: ["https://s2dd.ca", "https://www.s2dd.ca"]
 
 # Do not print debug messages in production
 config :logger, level: :info
