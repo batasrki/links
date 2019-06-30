@@ -4,7 +4,11 @@ defmodule Links.LinkTitleFetcher do
   def get_title(params) do
     case HTTPoison.get(params["url"]) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        title = Regex.run(~r{<title>(.*)</title>}, body) |> List.last()
+        title =
+          Regex.run(~r{<title(.*)</title>}, body)
+          |> List.last()
+          |> String.split(">")
+          |> List.last()
 
         Links.Repo.find_by_url(params["url"])
         |> Enum.each(fn record ->

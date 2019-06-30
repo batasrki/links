@@ -7,7 +7,7 @@ defmodule Links.MockController do
     body = """
     <html>
       <head>
-        <title>How To Mock a Server Response</title>
+        <title data-rh="true">How To Mock a Server Response</title>
       </head>
       <body>
         <p>Does this work?</p>
