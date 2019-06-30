@@ -1,9 +1,9 @@
 FROM ubuntu:16.04
 
-ENV REFRESHED_AT=2019-03-10 \
-    LANG=en_US.UTF-8 \
-    HOME=/opt/build \
-    TERM=xterm
+ENV REFRESHED_AT=2019-06-29 \
+  LANG=en_US.UTF-8 \
+  HOME=/opt/build \
+  TERM=xterm
 
 WORKDIR /opt/build
 
