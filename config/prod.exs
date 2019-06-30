@@ -20,7 +20,12 @@ config :links, LinksWeb.Endpoint,
   server: true,
   root: ".",
   version: Application.spec(:links, :vsn),
-  ssl: false
+  ssl: false,
+  pubsub: [
+    adapter: Phoenix.PubSub.PG2,
+    pool_size: 1,
+    name: Links.PubSub
+  ]
 
 # Do not print debug messages in production
 config :logger, level: :info

@@ -5,7 +5,12 @@ use Mix.Config
 config :links, LinksWeb.Endpoint,
   http: [port: 4001],
   server: false,
-  secret_key_base: "Qd+FSVTkEq1L+qxuO6pKTFzZ9jb4ho94F7ZJGmNfvtz9okdCTvpiga9aGVAVDzbs"
+  secret_key_base: "Qd+FSVTkEq1L+qxuO6pKTFzZ9jb4ho94F7ZJGmNfvtz9okdCTvpiga9aGVAVDzbs",
+  pubsub: [
+    adapter: Phoenix.PubSub.PG2,
+    pool_size: 1,
+    name: Links.PubSub
+  ]
 
 # Print only warnings and errors during test
 config :logger, level: :warn
