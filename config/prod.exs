@@ -20,7 +20,7 @@ config :links, LinksWeb.Endpoint,
   server: true,
   root: ".",
   version: Application.spec(:links, :vsn),
-  ssl: false,
+  ssl: true,
   pubsub: [
     adapter: Phoenix.PubSub.PG2,
     pool_size: 1,

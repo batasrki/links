@@ -5,7 +5,7 @@ defmodule Links.LinkTitleFetcher do
     case HTTPoison.get(params["url"]) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         title =
-          Regex.run(~r{<title(.*)</title>}, body)
+          Regex.run(~r{<title(.*)\n?</title>}, body)
           |> List.last()
           |> String.split(">")
           |> List.last()
