@@ -5,7 +5,12 @@
 // and connect at the socket path in "lib/web/endpoint.ex":
 import { Socket } from "phoenix"
 
-let socket = new Socket("/socket", { params: { token: window.userToken } })
+// authenticated version of the socket setup
+// let socket = new Socket("/socket", { params: { token: window.userToken } })
+
+// unauthenticated version of the socket setup
+let socket = new Socket("/socket", { params: {} })
+
 
 // When you connect, you'll often need to authenticate the client.
 // For example, imagine you have an authentication plug, `MyAuth`,
