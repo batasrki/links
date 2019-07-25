@@ -13,6 +13,10 @@ defmodule Links.CrawlerService do
     GenServer.cast(__MODULE__, {:update_link_location, params})
   end
 
+  def validate_links_urls() do
+    GenServer.cast(__MODULE__, :validate_links_urls)
+  end
+
   @impl GenServer
   def init(_arg) do
     HTTPoison.start()
@@ -33,15 +37,12 @@ defmodule Links.CrawlerService do
     Links.LinkMutator.update(link, params)
     {:noreply, state}
   end
+
+  @impl GenServer
+  def handle_cast(:validate_links_urls, state) do
+    Links.Repo.list(%{})
+    |> Enum.each(fn link -> Links.LinkLocationValidator.validate(link) end)
+
+    {:noreply, state}
+  end
 end
-
-# def start_link(opts) do
-#   {:ok, pid} = GenServer.start_link(__MODULE__, opts)
-#   Logger.info("Starting #{__MODULE__}")
-#   :timer.apply_interval(opts[:interval], __MODULE__, :perform, [pid])
-#   {:ok, pid}
-# end
-
-# def init(opts) do
-#   {:ok, opts}
-# end
