@@ -34,3 +34,14 @@ defmodule Links.CrawlerService do
     {:noreply, state}
   end
 end
+
+# def start_link(opts) do
+#   {:ok, pid} = GenServer.start_link(__MODULE__, opts)
+#   Logger.info("Starting #{__MODULE__}")
+#   :timer.apply_interval(opts[:interval], __MODULE__, :perform, [pid])
+#   {:ok, pid}
+# end
+
+# def init(opts) do
+#   {:ok, opts}
+# end

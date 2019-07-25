@@ -32,11 +32,6 @@ config :links, LinksWeb.Endpoint,
     ]
   ]
 
-config :exredis,
-  url: "redis://127.0.0.1:6379/0",
-  reconnect: :no_reconnect,
-  max_queue: :infinity
-
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed
