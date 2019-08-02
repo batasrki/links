@@ -4,11 +4,7 @@ defmodule Links.LinkTitleFetcher do
   def get_title(params) do
     case HTTPoison.get(params["url"]) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        title =
-          Regex.run(~r{<title(.*)\n?</title>}, body)
-          |> List.last()
-          |> String.split(">")
-          |> List.last()
+        title = parse_title_tag(body)
 
         Links.Repo.find_by_url(params["url"])
         |> Enum.each(fn record ->
@@ -36,6 +32,13 @@ defmodule Links.LinkTitleFetcher do
       {:error, %HTTPoison.Error{reason: reason}} ->
         Logger.error(reason)
     end
+  end
+
+  def parse_title_tag(body) do
+    Regex.run(~r{<title.*>\n*\s*(.*)\n*\s*</title>}, body)
+    |> List.last()
+    |> String.split(">")
+    |> List.last()
   end
 
   defp follow_redirect_with(params, headers) do
