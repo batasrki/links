@@ -35,10 +35,8 @@ defmodule Links.LinkTitleFetcher do
   end
 
   def parse_title_tag(body) do
-    Regex.run(~r{<title.*>\n*\s*(.*)\n*\s*</title>}, body)
-    |> List.last()
-    |> String.split(">")
-    |> List.last()
+    {"title", _, [title]} = Floki.find(body, "title") |> hd()
+    title
   end
 
   defp follow_redirect_with(params, headers) do
