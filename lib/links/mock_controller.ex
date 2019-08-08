@@ -36,4 +36,21 @@ defmodule Links.MockController do
   get "/test/404.html" do
     Plug.Conn.send_resp(conn, 404, "Not Found")
   end
+
+  get "/test/301.html" do
+    conn
+    |> Plug.Conn.put_resp_header("location", "http://localhost:8081/test/howto.html")
+    |> Plug.Conn.send_resp(301, "Moved")
+  end
+
+  get "/test/302.html" do
+    conn
+    |> Plug.Conn.put_resp_header("location", "http://localhost:8081/test/howto.html")
+    |> Plug.Conn.send_resp(302, "Moved again")
+  end
+
+  get "/test/500.html" do
+    Process.sleep(:infinity)
+    Plug.Conn.send_resp(conn, 500, "Server error")
+  end
 end
