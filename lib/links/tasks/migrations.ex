@@ -23,7 +23,7 @@ defmodule Mix.Tasks.Migrations do
 
     IO.inspect(filtered_timestamps_filenames)
 
-    # apply_pending_migrations(filtered_timestamps_filenames)
+    apply_pending_migrations(filtered_timestamps_filenames)
   end
 
   defp migration_files_timestamps(migration_files) do
