@@ -54,6 +54,7 @@ defmodule Links.Mixfile do
       {:httpoison, "~> 1.4"},
       {:floki, "~> 0.21.0"},
       {:dialyxir, "~> 1.0.0-rc.4", only: [:dev], runtime: false},
+      {:credo, "~> 1.1.0", only: [:dev, :test], runtime: false},
       {:phoenix_live_reload, "~> 1.2", only: :dev}
     ]
   end
