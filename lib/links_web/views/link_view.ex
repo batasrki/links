@@ -2,10 +2,9 @@ defmodule LinksWeb.LinkView do
   use LinksWeb, :view
 
   def archived?(link) do
-    case link.archive do
+    case link.state == "archived" do
       true -> "border border-danger"
       false -> ""
-      nil -> ""
     end
   end
 end

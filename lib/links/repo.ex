@@ -2,17 +2,6 @@ defmodule Links.Repo do
   alias Moebius.{Query, Db}
   require Logger
 
-  def paginated_list(since_id \\ nil) do
-    query =
-      Query.db(:links)
-      |> Query.sort(:id, :asc)
-      |> Query.filter("id > #{since_id}")
-      |> Query.select()
-
-    {:ok, result} = query |> Db.run()
-    result
-  end
-
   def by_last_added_at(filter_pagination_config) do
     query = Query.db(:links) |> Query.sort(:added_at, filter_pagination_config[:sort_direction])
 
@@ -66,18 +55,29 @@ defmodule Links.Repo do
     result
   end
 
-  defp paginate(query, %{per_page: per_page, page: page}) when is_number(per_page) do
+  defp paginate(query, %{per_page: per_page, after: id})
+       when is_number(per_page) and is_number(id) do
+    query
+    |> Query.filter("id > $1", id)
+    |> Query.limit(per_page)
+  end
+
+  defp paginate(query, %{per_page: per_page})
+       when is_number(per_page) do
     query
     |> Query.limit(per_page)
-    |> Query.skip((page - 1) * per_page)
   end
 
   defp paginate(query, _) do
     query
   end
 
-  defp filter(query, %{archived: archived}) when is_boolean(archived) do
-    query |> Query.filter(archive: archived)
+  defp filter(query, %{state: nil}) do
+    query
+  end
+
+  defp filter(query, %{state: state}) do
+    query |> Query.filter(state: state)
   end
 
   defp filter(query, _) do

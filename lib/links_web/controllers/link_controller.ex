@@ -12,6 +12,13 @@ defmodule LinksWeb.LinkController do
           into: %{},
           do: {String.to_existing_atom(key), val}
 
+    previous_config_params =
+      if Enum.empty?(atom_params) do
+        %{sort_direction: :asc}
+      else
+        previous_config_params
+      end
+
     conn = put_session(conn, :config_params, Map.merge(previous_config_params, atom_params))
 
     render(conn, "index.html",
@@ -60,6 +67,6 @@ defmodule LinksWeb.LinkController do
   end
 
   defp key_in_whitelist?(key) do
-    Enum.any?(["page", "per_page", "sort_direction", "archived"], fn i -> i == key end)
+    Enum.any?(["per_page", "after", "sort_direction", "state"], fn i -> i == key end)
   end
 end

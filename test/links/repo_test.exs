@@ -75,6 +75,21 @@ defmodule Links.TestRepo do
     end
   end
 
+  test "result limiting code works" do
+    items = Repo.list(%{per_page: 1})
+    assert 1 == Enum.count(items)
+  end
+
+  test "pagination code works" do
+    link = Repo.find_by_url("http://localhost:8081/test/howto.html") |> Enum.at(0)
+    items = Repo.list(%{per_page: 1, after: link.id})
+
+    fetched_link = items |> Enum.at(0)
+
+    assert 1 == Enum.count(items)
+    assert "http://localhost:8081/test/403.html" == fetched_link.url
+  end
+
   defp seed_table do
     links = [
       %{
@@ -85,7 +100,7 @@ defmodule Links.TestRepo do
         "client" => "test client"
       },
       %{
-        "url" => "http://localhost:8081/test/404.html",
+        "url" => "http://localhost:8081/test/403.html",
         "title" => "How To Seed the Test DB",
         "archive" => true,
         "added_at" => NaiveDateTime.utc_now(),
@@ -94,6 +109,13 @@ defmodule Links.TestRepo do
       %{
         "url" => "http://localhost:8081/test/404.html",
         "title" => "This one 404s",
+        "archive" => false,
+        "added_at" => NaiveDateTime.utc_now(),
+        "client" => "test client"
+      },
+      %{
+        "url" => "http://localhost:8081/test/404.html",
+        "title" => "This one has a duplicate URL",
         "archive" => false,
         "added_at" => NaiveDateTime.utc_now(),
         "client" => "test client"

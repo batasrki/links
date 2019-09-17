@@ -8,16 +8,22 @@
       <a class="nav-link" href="<%= link_path(@conn, :index) %>?sort_direction=desc">Newest first</a>
     </li>
     <li class="nav-item">
+      <a class="nav-link" href="<%= link_path(@conn, :index) %>?state=archived"">Archived</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="<%= link_path(@conn, :index) %>?state=active"">Active</a>
+    </li>
+    <li class="nav-item">
       <a class="nav-link" href="<%= link_path(@conn, :index) %>">All</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="<%= link_path(@conn, :index) %>?per_page=10&page=1">10</a>
+      <a class="nav-link" href="<%= link_path(@conn, :index) %>?per_page=10">10</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="<%= link_path(@conn, :index) %>?per_page=20&page=1">20</a>
+      <a class="nav-link" href="<%= link_path(@conn, :index) %>?per_page=20">20</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="<%= link_path(@conn, :index) %>?per_page=50&page=1">50</a>
+      <a class="nav-link" href="<%= link_path(@conn, :index) %>?per_page=50">50</a>
     </li>
 <!--    <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Display</a>

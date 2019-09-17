@@ -9,8 +9,8 @@ defmodule Links.LinkReader do
     filter_pagination_config =
       Map.put(
         filter_pagination_config,
-        :archived,
-        convert_from(pagination_config, :archived)
+        :state,
+        convert_from(pagination_config, :state)
       )
 
     filter_pagination_config =
@@ -26,10 +26,10 @@ defmodule Links.LinkReader do
     Repo.list(filter_pagination_config)
   end
 
-  defp convert_from(pagination_config, :archived) do
-    case Map.fetch(pagination_config, :archived) do
+  defp convert_from(pagination_config, :state) do
+    case Map.fetch(pagination_config, :state) do
       :error -> nil
-      {:ok, val} -> String.to_existing_atom(val)
+      {:ok, val} -> val
     end
   end
 

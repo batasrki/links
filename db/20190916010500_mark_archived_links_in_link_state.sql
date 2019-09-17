@@ -1,0 +1,1 @@
+UPDATE links SET state='archived' WHERE archive=TRUE;
