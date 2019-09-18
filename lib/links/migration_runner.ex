@@ -1,5 +1,5 @@
 defmodule Links.MigrationRunner do
-  def run() do
+  def run(file_path) do
     [:poolboy, :moebius] |> Enum.each(&Application.ensure_all_started/1)
     Moebius.Db.start_link(Moebius.get_connection())
 
@@ -9,7 +9,7 @@ defmodule Links.MigrationRunner do
     last_known_migration = Integer.to_string(last_known_migration_record.version)
 
     IO.inspect(last_known_migration)
-    {:ok, migration_files} = File.ls("db")
+    {:ok, migration_files} = File.ls(file_path)
 
     migration_timestamps = migration_files_timestamps(migration_files)
     timestamps_filenames = Enum.zip(migration_timestamps, migration_files)
