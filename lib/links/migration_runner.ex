@@ -3,12 +3,12 @@ defmodule Links.MigrationRunner do
     [:poolboy, :moebius] |> Enum.each(&Application.ensure_all_started/1)
     Moebius.Db.start_link(Moebius.get_connection())
 
-    IO.puts("Starting Moebius migrations")
+    IO.inspect("Starting Moebius migrations")
 
     last_known_migration_record = get_last_migration()
     last_known_migration = Integer.to_string(last_known_migration_record.version)
 
-    IO.puts(last_known_migration)
+    IO.inspect(last_known_migration)
     {:ok, migration_files} = File.ls("db")
 
     migration_timestamps = migration_files_timestamps(migration_files)
