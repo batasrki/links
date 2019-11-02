@@ -28,8 +28,10 @@ mix phx.digest
 
 # Build the release
 # mix release.init
-mix release --env=prod
+mix release --overwrite
+
+# tar -czf _build/prod/rel/$APP_NAME/ _build/docker/rel/"$APP_NAME-$APP_VSN.tar.gz"
 # Copy tarball to output
-cp "_build/prod/rel/$APP_NAME/releases/$APP_VSN/$APP_NAME.tar.gz" _build/docker/rel/"$APP_NAME-$APP_VSN.tar.gz"
+# cp "_build/prod/rel/$APP_NAME/releases/$APP_VSN/$APP_NAME.tar.gz" _build/docker/rel/"$APP_NAME-$APP_VSN.tar.gz"
 
 exit 0

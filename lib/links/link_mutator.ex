@@ -15,8 +15,9 @@ defmodule Links.LinkMutator do
     params = for {key, val} <- params, into: %{}, do: {String.to_atom(key), val}
     result = Links.Link.create(params)
 
-    unless {:error, _} = result do
-      Links.CrawlerService.fetch_title(params)
+    case result do
+      {:ok, _} -> Links.CrawlerService.fetch_title(params)
+      {:error, _} -> Logger.info("Invalid record, not trying to fetch the title")
     end
 
     result
