@@ -1,23 +1,31 @@
 <section class="col-md-8">
-    <h3><%= @link.title %></h3>
+    <h3><%= @link.data.title %></h3>
     <ul class="nav nav-pills">
         <li class="nav-item"><a class="nav-link" href="<%= link_path(@conn, :index) %>">Index</a></li>
     </ul>
-    <%= form_for @conn, link_path(@conn, :update, @link.id), [method: :put], fn f -> %>
+    <%= form_for @link, link_path(@conn, :update, @link.data.id), [method: :put], fn f -> %>
+        <% if @link.action do %>
+            <div class="alert alert-danger">
+                There are errors that need correcting.
+            </div>
+        <% end %>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="title">Title</label>
-                <%= text_input f, :title, value: @link.title, class: "form-control" %>
+                <%= text_input f, :title, value: @link.data.title, class: "form-control" %>
+                <%= error_tag f, :title %>
             </div>
             <div class="form-group col-md-2">
                 <label for="client">Client</label>
-                <%= text_input f, :client, value: @link.client, class: "form-control" %>
+                <%= text_input f, :client, value: @link.data.client, class: "form-control" %>
+                <%= error_tag f, :client %>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-8">
                 <label for="url">URL</label>
-                <%= url_input f, :url, value: @link.url, class: "form-control" %>
+                <%= url_input f, :url, value: @link.data.url, class: "form-control" %>
+                <%= error_tag f, :url %>
             </div>
         </div>
         

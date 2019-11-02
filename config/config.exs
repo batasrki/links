@@ -10,15 +10,18 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:user_id]
 
-config :moebius,
-  connection: [
-    hostname: "localhost",
-    username: "srdjan",
-    password: "srkijevo",
-    database: "links_repo"
-  ],
-  scripts: "db"
+config :links, Links.Repo,
+  hostname: "localhost",
+  username: "srdjan",
+  password: "srkijevo",
+  database: "links_repo",
+  port: 5432,
+  show_sensitive_data_on_connection_error: true,
+  pool_size: 5
 
+config :links, ecto_repos: [Links.Repo]
+
+config :phoenix, :json_library, Jason
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

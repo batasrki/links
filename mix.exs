@@ -19,16 +19,6 @@ defmodule Links.Mixfile do
   def application do
     [
       mod: {Links.Application, []},
-      applications: [
-        :plug_cowboy,
-        :poolboy,
-        :moebius,
-        :poison,
-        :httpoison,
-        :floki,
-        :phoenix_html,
-        :phoenix
-      ],
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -45,14 +35,18 @@ defmodule Links.Mixfile do
       {:phoenix, "~> 1.4.1"},
       {:phoenix_pubsub, "~> 1.1"},
       {:phoenix_html, "~> 2.11"},
+      {:phoenix_ecto, "~> 4.0"},
       {:gettext, "~> 0.11"},
       {:plug_cowboy, "~> 2.0"},
       {:cowboy, "~> 2.5"},
       {:distillery, "~> 2.0"},
-      {:moebius, "~>3.0.1"},
-      {:poison, "~>3.0.0"},
-      {:httpoison, "~> 1.4"},
+      {:ecto_sql, "~>3.0"},
+      {:postgrex, "~> 0.15"},
+      {:httpoison, "~>1.4"},
       {:floki, "~> 0.21.0"},
+      {:comeonin, "~> 5.1"},
+      {:pbkdf2_elixir, "~> 1.0"},
+      {:jason, "~> 1.0"},
       {:dialyxir, "~> 1.0.0-rc.4", only: [:dev], runtime: false},
       {:credo, "~> 1.1.0", only: [:dev, :test], runtime: false},
       {:phoenix_live_reload, "~> 1.2", only: :dev}

@@ -3,11 +3,8 @@ CREATE TABLE links(
     title VARCHAR(100),
     url VARCHAR(100),
     client VARCHAR(50),
-    added_at TIMESTAMPZ,
+    added_at TIMESTAMP WITH TIME ZONE,
     archive BOOLEAN DEFAULT FALSE,
-    inserted_at TIMESTAMPZ,
-    updated_at TIMESTAMPZ
+    inserted_at TIMESTAMP WITH TIME ZONE,
+    updated_at TIMESTAMP WITH TIME ZONE
 );
-
-CREATE INDEX added_at_archived_idx
-ON links (added_at, archive);

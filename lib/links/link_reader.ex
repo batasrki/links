@@ -1,9 +1,9 @@
 defmodule Links.LinkReader do
-  alias Links.Repo
+  alias Links.Link
 
   def to_list(pagination_config) do
     filter_pagination_config = %{
-      sort_direction: Map.get(pagination_config, :sort_direction, :asc)
+      sort_direction: Map.get(pagination_config, :sort_direction, "asc")
     }
 
     filter_pagination_config =
@@ -23,7 +23,7 @@ defmodule Links.LinkReader do
     filter_pagination_config =
       Map.put(filter_pagination_config, :page, convert_from(pagination_config, :page))
 
-    Repo.list(filter_pagination_config)
+    Link.list(filter_pagination_config)
   end
 
   defp convert_from(pagination_config, :state) do
@@ -42,19 +42,19 @@ defmodule Links.LinkReader do
   end
 
   def to_list() do
-    Repo.list(%{})
+    Link.list(%{})
   end
 
   def to_json_list(params) do
-    to_list(params) |> Poison.encode!()
+    to_list(params) |> Jason.encode!()
   end
 
   def by_id(id) do
-    result = Repo.find_by_id(String.to_integer(id))
+    Link.find_by_id(String.to_integer(id))
+  end
 
-    case result do
-      [] -> nil
-      _ -> hd(result)
-    end
+  def by_id_for_editing(id) do
+    link = Link.find_by_id(String.to_integer(id))
+    Links.Link.update_changeset(link, %{})
   end
 end

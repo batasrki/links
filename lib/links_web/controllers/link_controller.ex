@@ -14,7 +14,7 @@ defmodule LinksWeb.LinkController do
 
     previous_config_params =
       if Enum.empty?(atom_params) do
-        %{sort_direction: :asc}
+        %{sort_direction: "asc"}
       else
         previous_config_params
       end
@@ -27,7 +27,7 @@ defmodule LinksWeb.LinkController do
   end
 
   def edit(conn, params) do
-    link = LinkReader.by_id(params["id"])
+    link = LinkReader.by_id_for_editing(params["id"])
 
     case link do
       nil -> render(conn, "404.html")
@@ -36,17 +36,16 @@ defmodule LinksWeb.LinkController do
   end
 
   def update(conn, params) do
-    link = LinkReader.by_id(params["id"])
-    result = LinkMutator.update(link, Map.take(params, ["title", "client", "url"]))
+    link = LinkReader.by_id_for_editing(params["id"])
+    result = LinkMutator.update(link.data, Map.take(params["link"], ["title", "client", "url"]))
 
     case result do
       {:ok, _} ->
         redirect(conn, to: "/")
 
-      {:error, message} ->
+      {:error, changeset} ->
         conn
-        |> put_flash(:error, message)
-        |> render("edit.html", link: link)
+        |> render("edit.html", link: changeset)
     end
   end
 
@@ -57,7 +56,13 @@ defmodule LinksWeb.LinkController do
       {:ok, _} ->
         redirect(conn, to: "/")
 
-      {:error, message} ->
+      {:error, changeset} ->
+        message =
+          for {k, v} <- changeset.errors, into: "" do
+            {msg, _} = v
+            "#{k} #{msg}. "
+          end
+
         conn
         |> put_flash(:error, message)
         |> render("index.html",

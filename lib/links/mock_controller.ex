@@ -37,6 +37,10 @@ defmodule Links.MockController do
     Plug.Conn.send_resp(conn, 404, "Not Found")
   end
 
+  get "/test/429.html" do
+    Plug.Conn.send_resp(conn, 429, "Too many requests")
+  end
+
   get "/test/301.html" do
     conn
     |> Plug.Conn.put_resp_header("location", "http://localhost:8081/test/howto.html")

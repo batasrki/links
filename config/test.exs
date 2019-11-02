@@ -15,10 +15,11 @@ config :links, LinksWeb.Endpoint,
 # Print only warnings and errors during test
 config :logger, level: :warn
 
-config :moebius,
-  connection: [
-    hostname: "localhost",
-    username: "srdjan",
-    password: "srkijevo",
-    database: "links_repo_test"
-  ]
+config :links, Links.Repo,
+  username: "srdjan",
+  password: "srkijevo",
+  database: "links_repo_test",
+  hostname: "localhost",
+  pool: Ecto.Adapters.SQL.Sandbox
+
+config :pbkdf2_elixir, rounds: 1

@@ -1,88 +1,142 @@
 defmodule Links.TestRepo do
   use ExUnit.Case
-  alias Links.Repo
+  alias Links.{Repo, Link}
 
   setup do
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)
     seed_table()
 
     on_exit(fn ->
-      Moebius.Query.db(:links) |> Moebius.Query.delete() |> Moebius.Db.run()
+      Repo.delete_all(Link)
     end)
   end
 
-  test "find_by_url" do
-    result = Repo.find_by_url("http://localhost:8081/test/404.html")
-    assert 1 <= Enum.count(result)
-  end
-
-  test "find by url can return more than one" do
-    result = Repo.find_by_url("http://localhost:8081/test/404.html")
-    assert 1 < Enum.count(result)
+  test "find by URL" do
+    result = Link.find_by_url("http://localhost:8081/test/404.html")
+    assert "http://localhost:8081/test/404.html" == result.url
   end
 
   test "find by ID" do
-    result = Repo.find_by_url("http://localhost:8081/test/howto.html") |> Enum.at(0)
-    assert result == Repo.find_by_id(result.id) |> Enum.at(0)
+    result = Link.find_by_url("http://localhost:8081/test/howto.html")
+    assert result == Link.find_by_id(result.id)
   end
 
   test "updating a link URL works" do
-    link = Repo.find_by_url("http://localhost:8081/test/howto.html") |> Enum.at(0)
+    link = Link.find_by_url("http://localhost:8081/test/howto.html")
 
     update_params = %{
-      "url" => "http://localhost:8081/test/howto_1.html",
-      "client" => "test_client"
+      url: "http://localhost:8081/test/howto_1.html",
+      client: "test_client"
     }
 
-    case Repo.update(link.id, update_params) do
-      {:ok, record} ->
-        assert "http://localhost:8081/test/howto_1.html" == record.url
+    {:ok, result} = Link.update(link, update_params)
+    assert "http://localhost:8081/test/howto_1.html" == result.url
+  end
 
-      {:error, message} ->
-        IO.puts(message)
-    end
+  test "updating a link URL with garbage doesn't work" do
+    link = Link.find_by_url("http://localhost:8081/test/howto.html")
+
+    update_params = %{
+      url: "garbage",
+      client: "test_client"
+    }
+
+    {:error, result} = Link.update(link, update_params)
+    assert {:url, {"has invalid format", [validation: :format]}} in result.errors
+  end
+
+  test "updating a link URL with an empty value doesn't work" do
+    link = Link.find_by_url("http://localhost:8081/test/howto.html")
+
+    update_params = %{
+      url: "",
+      client: "test_client"
+    }
+
+    {:error, result} = Link.update(link, update_params)
+    assert {:url, {"can't be blank", [validation: :required]}} in result.errors
   end
 
   test "updating a link title works" do
-    link = Repo.find_by_url("http://localhost:8081/test/howto.html") |> Enum.at(0)
+    link = Link.find_by_url("http://localhost:8081/test/howto.html")
 
     update_params = %{
-      "title" => "Updated title",
-      "client" => "test_client"
+      title: "Updated title",
+      client: "test_client"
     }
 
-    case Repo.update(link.id, update_params) do
-      {:ok, record} ->
-        assert "Updated title" == record.title
+    {:ok, result} = Link.update(link, update_params)
+    assert "Updated title" == result.title
+  end
 
-      {:error, message} ->
-        IO.puts(message)
-    end
+  test "updating a link title with an empty value doesn't work" do
+    link = Link.find_by_url("http://localhost:8081/test/howto.html")
+
+    update_params = %{
+      title: "",
+      client: "test_client"
+    }
+
+    {:error, result} = Link.update(link, update_params)
+    assert {:title, {"can't be blank", [validation: :required]}} in result.errors
   end
 
   test "creating a link works" do
-    create_params = %{
-      "url" => "http://localhost:8081/test/creation.html",
-      "client" => "test client",
-      "added_at" => NaiveDateTime.utc_now()
+    params = %{
+      url: "http://localhost:8081/test/creation.html",
+      client: "test client",
+      added_at: DateTime.utc_now() |> DateTime.truncate(:second)
     }
 
-    case Repo.create(create_params) do
-      {:ok, record} ->
-        assert Regex.run(~r{.*creation.*}, record.url)
+    {:ok, result} = Link.create(params)
+    assert params.url == result.url
+  end
 
-      {:error, message} ->
-        IO.puts(message)
-    end
+  test "creating a link with a bad URL doesn't work" do
+    params = %{
+      url: "garbage",
+      client: "test client",
+      added_at: DateTime.utc_now() |> DateTime.truncate(:second)
+    }
+
+    {:error, result} = Link.create(params)
+    assert {:url, {"has invalid format", [validation: :format]}} in result.errors
+  end
+
+  test "creating a link with an empty URL doesn't work" do
+    params = %{
+      url: "",
+      client: "test client",
+      added_at: DateTime.utc_now() |> DateTime.truncate(:second)
+    }
+
+    {:error, result} = Link.create(params)
+    assert {:url, {"can't be blank", [validation: :required]}} in result.errors
+  end
+
+  test "creating a link with a duplicate URL doesn't work" do
+    params = %{
+      url: "http://localhost:8081/test/creation.html",
+      client: "test client",
+      added_at: DateTime.utc_now() |> DateTime.truncate(:second)
+    }
+
+    _valid = Link.create(params)
+
+    {:error, invalid} = Link.create(params)
+
+    assert {:url,
+            {"has already been taken", [constraint: :unique, constraint_name: "links_url_index"]}} in invalid.errors
   end
 
   test "result limiting code works" do
-    items = Repo.list(%{per_page: 1})
+    items = Link.list(%{per_page: 1, sort_direction: "asc"})
     assert 1 == Enum.count(items)
   end
 
   test "pagination code works" do
-    link = Repo.find_by_url("http://localhost:8081/test/howto.html") |> Enum.at(0)
-    items = Repo.list(%{per_page: 1, after: link.id})
+    link = Link.find_by_url("http://localhost:8081/test/howto.html")
+    items = Link.list(%{per_page: 1, after: link.id, sort_direction: "asc"})
 
     fetched_link = items |> Enum.at(0)
 
@@ -93,35 +147,35 @@ defmodule Links.TestRepo do
   defp seed_table do
     links = [
       %{
-        "url" => "http://localhost:8081/test/howto.html",
-        "title" => "How To Seed the Test DB",
-        "archive" => false,
-        "added_at" => NaiveDateTime.utc_now(),
-        "client" => "test client"
+        url: "http://localhost:8081/test/howto.html",
+        title: "How To Seed the Test DB",
+        state: "active",
+        added_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        client: "test client"
       },
       %{
-        "url" => "http://localhost:8081/test/403.html",
-        "title" => "How To Seed the Test DB",
-        "archive" => true,
-        "added_at" => NaiveDateTime.utc_now(),
-        "client" => "test client"
+        url: "http://localhost:8081/test/403.html",
+        title: "How To Seed the Test DB",
+        state: "active",
+        added_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        client: "test client"
       },
       %{
-        "url" => "http://localhost:8081/test/404.html",
-        "title" => "This one 404s",
-        "archive" => false,
-        "added_at" => NaiveDateTime.utc_now(),
-        "client" => "test client"
+        url: "http://localhost:8081/test/404.html",
+        title: "This one 404s",
+        state: "active",
+        added_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        client: "test client"
       },
       %{
-        "url" => "http://localhost:8081/test/404.html",
-        "title" => "This one has a duplicate URL",
-        "archive" => false,
-        "added_at" => NaiveDateTime.utc_now(),
-        "client" => "test client"
+        url: "http://localhost:8081/test/429.html",
+        title: "This one hits a rate limit",
+        state: "active",
+        added_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        client: "test client"
       }
     ]
 
-    Links.Repo.batch_save!(links)
+    Links.Repo.insert_all(Links.Link, links)
   end
 end

@@ -1,7 +1,8 @@
 defmodule Links.CrawlerService do
   use GenServer
+  alias Links.Link
 
-  def start_link() do
+  def start_link(_ignore) do
     GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
@@ -31,7 +32,7 @@ defmodule Links.CrawlerService do
 
   @impl GenServer
   def handle_cast({:update_link_location, params}, state) do
-    link = Links.Repo.find_by_url(params.url)
+    link = Link.find_by_url(params.url)
     params = Map.put(params, :url, params.new_url)
     Map.delete(params, :new_url)
     Links.LinkMutator.update(link, params)
@@ -40,7 +41,7 @@ defmodule Links.CrawlerService do
 
   @impl GenServer
   def handle_cast(:validate_links_urls, state) do
-    Links.Repo.list(%{})
+    Link.list(%{})
     |> Enum.each(fn link -> Links.LinkLocationValidator.validate(link) end)
 
     {:noreply, state}

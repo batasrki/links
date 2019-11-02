@@ -1,15 +1,14 @@
 defmodule Links.LinkTitleFetcher do
   require Logger
+  alias Links.Link
 
   def get_title(params) do
     case HTTPoison.get(params["url"]) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         title = parse_title_tag(body)
 
-        Links.Repo.find_by_url(params["url"])
-        |> Enum.each(fn record ->
-          Links.Repo.update(record.id, %{"title" => title})
-        end)
+        link = Link.find_by_url(params["url"])
+        Link.update(link, %{title: title})
 
         LinksWeb.Endpoint.broadcast!("updates:*", "incoming", %{title: title})
 
@@ -24,10 +23,8 @@ defmodule Links.LinkTitleFetcher do
       {:ok, %HTTPoison.Response{status_code: 404}} ->
         Logger.info("Archiving #{params["url"]} due to dead link")
 
-        Links.Repo.find_by_url(params["url"])
-        |> Enum.each(fn record ->
-          Links.Repo.update(record.id, %{"archive" => true})
-        end)
+        link = Link.find_by_url(params["url"])
+        Link.update(link, %{state: "archived"})
 
       {:error, %HTTPoison.Error{reason: reason}} ->
         Logger.error(reason)
