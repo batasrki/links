@@ -54,3 +54,14 @@ config :logger, :console, format: "[$level] $message\n"
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.
 config :phoenix, :stacktrace_depth, 20
+
+config :links, Links.Repo,
+  hostname: "localhost",
+  username: "srdjan",
+  password: "srkijevo",
+  database: "links_repo",
+  port: 5432,
+  show_sensitive_data_on_connection_error: true,
+  pool_size: 5
+
+config :links, ecto_repos: [Links.Repo]

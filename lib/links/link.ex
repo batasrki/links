@@ -100,7 +100,7 @@ defmodule Links.Link do
 
   def create_changeset(link, params) do
     link
-    |> cast(params, [:url, :client, :added_at])
+    |> cast(params, [:url, :client, :added_at, :title, :state])
     |> validate_required([:url, :client])
     |> validate_format(:url, ~r/^http/)
     |> unique_constraint(:url)
