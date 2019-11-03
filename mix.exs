@@ -47,7 +47,7 @@ defmodule Links.Mixfile do
       {:distillery, "~> 2.0"},
       {:ecto_sql, "~>3.0"},
       {:postgrex, "~> 0.15"},
-      {:httpoison, "~>1.4"},
+      {:httpoison, "~>1.6"},
       {:floki, "~> 0.21.0"},
       {:comeonin, "~> 5.1"},
       {:pbkdf2_elixir, "~> 1.0"},
