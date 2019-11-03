@@ -13,10 +13,10 @@ defmodule Links.TestLinkLocationValidator do
   end
 
   test "getting a 301 updates the link URL" do
-    url_to_fetch = %{"url" => "http://localhost:8081/test/301.html"}
-    record = Link.find_by_url(url_to_fetch["url"])
+    url_to_fetch = %{url: "http://localhost:8081/test/301.html"}
+    record = Link.find_by_url(url_to_fetch.url)
 
-    assert url_to_fetch["url"] == record.url
+    assert url_to_fetch.url == record.url
     LinkLocationValidator.validate(record)
 
     updated_record = Link.find_by_id(record.id)
@@ -24,10 +24,10 @@ defmodule Links.TestLinkLocationValidator do
   end
 
   test "getting a 302 updates the link URL" do
-    url_to_fetch = %{"url" => "http://localhost:8081/test/302.html"}
-    record = Link.find_by_url(url_to_fetch["url"])
+    url_to_fetch = %{url: "http://localhost:8081/test/302.html"}
+    record = Link.find_by_url(url_to_fetch.url)
 
-    assert url_to_fetch["url"] == record.url
+    assert url_to_fetch.url == record.url
     LinkLocationValidator.validate(record)
 
     updated_record = Link.find_by_id(record.id)
@@ -35,10 +35,10 @@ defmodule Links.TestLinkLocationValidator do
   end
 
   test "getting a 404 while archives the link" do
-    url_to_fetch = %{"url" => "http://localhost:8081/test/404.html"}
-    record = Link.find_by_url(url_to_fetch["url"])
+    url_to_fetch = %{url: "http://localhost:8081/test/404.html"}
+    record = Link.find_by_url(url_to_fetch.url)
 
-    assert url_to_fetch["url"] == record.url
+    assert url_to_fetch.url == record.url
     LinkLocationValidator.validate(record)
 
     updated_record = Link.find_by_id(record.id)
@@ -46,10 +46,10 @@ defmodule Links.TestLinkLocationValidator do
   end
 
   test "getting an error logs it and moves on" do
-    url_to_fetch = %{"url" => "http://localhost:8081/test/500.html"}
-    record = Link.find_by_url(url_to_fetch["url"])
+    url_to_fetch = %{url: "http://localhost:8081/test/500.html"}
+    record = Link.find_by_url(url_to_fetch.url)
 
-    assert url_to_fetch["url"] == record.url
+    assert url_to_fetch.url == record.url
     assert capture_log(fn -> LinkLocationValidator.validate(record, 0) end)
   end
 

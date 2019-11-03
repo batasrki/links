@@ -3,27 +3,27 @@ defmodule Links.LinkTitleFetcher do
   alias Links.Link
 
   def get_title(params) do
-    case HTTPoison.get(params["url"]) do
+    case HTTPoison.get(params.url) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         title = parse_title_tag(body)
 
-        link = Link.find_by_url(params["url"])
+        link = Link.find_by_url(params.url)
         Link.update(link, %{title: title})
 
         LinksWeb.Endpoint.broadcast!("updates:*", "incoming", %{title: title})
 
       {:ok, %HTTPoison.Response{status_code: 301, headers: headers}} ->
-        Logger.info("Following a 301 redirect for #{params["url"]}")
+        Logger.info("Following a 301 redirect for #{params.url}")
         follow_redirect_with(params, headers)
 
       {:ok, %HTTPoison.Response{status_code: 302, headers: headers}} ->
-        Logger.info("Following a 302 redirect for #{params["url"]}")
+        Logger.info("Following a 302 redirect for #{params.url}")
         follow_redirect_with(params, headers)
 
       {:ok, %HTTPoison.Response{status_code: 404}} ->
-        Logger.info("Archiving #{params["url"]} due to dead link")
+        Logger.info("Archiving #{params.url} due to dead link")
 
-        link = Link.find_by_url(params["url"])
+        link = Link.find_by_url(params.url)
         Link.update(link, %{state: "archived"})
 
       {:error, %HTTPoison.Error{reason: reason}} ->

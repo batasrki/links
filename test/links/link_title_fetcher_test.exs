@@ -12,10 +12,10 @@ defmodule Links.TestLinkTitleFetcher do
   end
 
   test "fetching a title updates the saved record" do
-    url_to_fetch = %{"url" => "http://localhost:8081/test/howto.html"}
-    record = Link.find_by_url(url_to_fetch["url"])
+    url_to_fetch = %{url: "http://localhost:8081/test/howto.html"}
+    record = Link.find_by_url(url_to_fetch.url)
 
-    assert url_to_fetch["url"] == record.url
+    assert url_to_fetch.url == record.url
     LinkTitleFetcher.get_title(url_to_fetch)
 
     updated_record = Link.find_by_id(record.id)
@@ -23,10 +23,10 @@ defmodule Links.TestLinkTitleFetcher do
   end
 
   test "fetching a weirder title updates the saved record" do
-    url_to_fetch = %{"url" => "http://localhost:8081/test/howto1.html"}
-    record = Link.find_by_url(url_to_fetch["url"])
+    url_to_fetch = %{url: "http://localhost:8081/test/howto1.html"}
+    record = Link.find_by_url(url_to_fetch.url)
 
-    assert url_to_fetch["url"] == record.url
+    assert url_to_fetch.url == record.url
     LinkTitleFetcher.get_title(url_to_fetch)
 
     updated_record = Link.find_by_id(record.id)
@@ -34,10 +34,10 @@ defmodule Links.TestLinkTitleFetcher do
   end
 
   test "getting a 404 while fetching the title archives the link" do
-    url_to_fetch = %{"url" => "http://localhost:8081/test/404.html"}
-    record = Link.find_by_url(url_to_fetch["url"])
+    url_to_fetch = %{url: "http://localhost:8081/test/404.html"}
+    record = Link.find_by_url(url_to_fetch.url)
 
-    assert url_to_fetch["url"] == record.url
+    assert url_to_fetch.url == record.url
     LinkTitleFetcher.get_title(url_to_fetch)
 
     updated_record = Link.find_by_id(record.id)

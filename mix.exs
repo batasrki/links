@@ -10,6 +10,11 @@ defmodule Links.Mixfile do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       deps: deps()
+      # releases: [
+      #   prod: [
+      #     steps: [:assemble, :tar]
+      #   ]
+      # ]
     ]
   end
 
