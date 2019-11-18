@@ -12,10 +12,14 @@ defmodule Links.Mixfile do
       deps: deps(),
       releases: [
         prod: [
-          steps: [:assemble, :tar]
+          steps: [:assemble, &do_nothing/1, :tar]
         ]
       ]
     ]
+  end
+
+  defp do_nothing(struct) do
+    struct
   end
 
   # Configuration for the OTP application.
