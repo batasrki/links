@@ -9,12 +9,12 @@ defmodule Links.Mixfile do
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
-      deps: deps()
-      # releases: [
-      #   prod: [
-      #     steps: [:assemble, :tar]
-      #   ]
-      # ]
+      deps: deps(),
+      releases: [
+        prod: [
+          steps: [:assemble, :tar]
+        ]
+      ]
     ]
   end
 
