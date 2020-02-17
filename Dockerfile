@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-ENV REFRESHED_AT=2019-11-17 \
+ENV REFRESHED_AT=2019-02-16 \
   LANG=en_US.UTF-8 \
   HOME=/opt/build \
   TERM=xterm
@@ -16,7 +16,7 @@ RUN \
   rm erlang-solutions_2.0_all.deb && \
   apt-get update -y && \
   apt-get install -y erlang elixir curl && \
-  curl -sL https://deb.nodesource.com/setup_11.x | bash - && \
+  curl -sL https://deb.nodesource.com/setup_13.x | bash - && \
   apt-get install -y nodejs
 
 CMD ["/bin/bash"]
