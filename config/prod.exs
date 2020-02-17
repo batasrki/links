@@ -35,6 +35,7 @@ config :links, Links.Mailer,
   adapter: Bamboo.SendGridAdapter,
   api_key: {:system, "SENDGRID_API_KEY"}
 
+config :links, ecto_repos: [Links.Repo]
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key
