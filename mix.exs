@@ -4,7 +4,7 @@ defmodule Links.Mixfile do
   def project do
     [
       app: :links,
-      version: "0.5.1",
+      version: "0.6.0",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
@@ -53,9 +53,8 @@ defmodule Links.Mixfile do
       {:postgrex, "~> 0.15"},
       {:httpoison, "~>1.6"},
       {:floki, "~> 0.21.0"},
-      {:comeonin, "~> 5.1"},
-      {:pbkdf2_elixir, "~> 1.0"},
       {:jason, "~> 1.0"},
+      {:bamboo, "~> 1.4"},
       {:dialyxir, "~> 1.0.0-rc.4", only: [:dev], runtime: false},
       {:credo, "~> 1.1.0", only: [:dev, :test], runtime: false},
       {:phoenix_live_reload, "~> 1.2", only: :dev}

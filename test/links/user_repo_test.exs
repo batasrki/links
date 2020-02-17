@@ -1,29 +1,28 @@
 defmodule Links.TestUserRepo do
   use ExUnit.Case
-  alias Links.User
+  alias Links.{Repo, User}
 
   setup do
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)
+
     on_exit(fn ->
-      nil
-      # Moebius.Query.db(:links) |> Moebius.Query.delete() |> Moebius.Db.run()
-      # Moebius.Query.db(:users) |> Moebius.Query.delete() |> Moebius.Db.run()
+      Repo.delete_all(User)
     end)
   end
 
-  test "creating a user works" do
-    create_params = %{
-      "username" => "tester",
-      "email" => "tester@example.com",
-      "password" => "srkijevo"
+  test "all with no params gets all users" do
+    Links.Accounts.User.create(create_params())
+    user = User.all() |> hd()
+
+    assert "tester@example.com", user.email
+  end
+
+  defp create_params(opts \\ %{}) do
+    default_params = %{
+      username: "tester",
+      email: "tester@example.com"
     }
 
-    case User.create(create_params) do
-      {:ok, record} ->
-        assert "tester" == record.username
-        assert User.verify_password("srkijevo", record.hashed_password)
-
-      {:error, message} ->
-        assert nil == message
-    end
+    Map.merge(default_params, opts)
   end
 end

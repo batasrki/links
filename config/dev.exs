@@ -65,3 +65,7 @@ config :links, Links.Repo,
   pool_size: 5
 
 config :links, ecto_repos: [Links.Repo]
+
+config :links, login_request_salt: "this is a salt! use it carefully?"
+
+config :links, Links.Mailer, adapter: Bamboo.LocalAdapter

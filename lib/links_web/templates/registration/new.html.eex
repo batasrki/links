@@ -1,0 +1,15 @@
+<section class="col-xs-12">
+  <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+  <%= form_for @conn, registration_path(@conn, :create), fn f -> %>
+    <fieldset>
+      <legend>Sign up</legend>
+      <div class="form-row col-xs-6">
+        <%= email_input f, :email, class: "form-control col", placeholder: "E-mail"%>
+      </div>
+      <div class="form=row col-xs-2">
+        <%= text_input f, :username, class: "form-control col", placeholder: "Username" %>
+      </div>
+      <%= submit "Sign Up", class: "btn btn-primary col-md-2" %>
+    </fieldset>
+  <% end %>
+</section

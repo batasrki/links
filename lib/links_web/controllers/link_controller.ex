@@ -4,26 +4,30 @@ defmodule LinksWeb.LinkController do
   alias Links.{LinkReader, LinkMutator}
 
   def index(conn, params) do
-    previous_config_params = get_session(conn, :config_params) || %{}
+    if LinksWeb.AuthHelper.logged_in?(conn) do
+      previous_config_params = get_session(conn, :config_params) || %{}
 
-    atom_params =
-      for {key, val} <- params,
-          key_in_whitelist?(key),
-          into: %{},
-          do: {String.to_existing_atom(key), val}
+      atom_params =
+        for {key, val} <- params,
+            key_in_whitelist?(key),
+            into: %{},
+            do: {String.to_existing_atom(key), val}
 
-    previous_config_params =
-      if Enum.empty?(atom_params) do
-        %{sort_direction: "asc"}
-      else
-        previous_config_params
-      end
+      previous_config_params =
+        if Enum.empty?(atom_params) do
+          %{sort_direction: "asc"}
+        else
+          previous_config_params
+        end
 
-    conn = put_session(conn, :config_params, Map.merge(previous_config_params, atom_params))
+      conn = put_session(conn, :config_params, Map.merge(previous_config_params, atom_params))
 
-    render(conn, "index.html",
-      links: Enum.chunk_every(LinkReader.to_list(get_session(conn, :config_params)), 3)
-    )
+      render(conn, "index.html",
+        links: Enum.chunk_every(LinkReader.to_list(get_session(conn, :config_params)), 3)
+      )
+    else
+      redirect(conn, to: login_request_path(conn, :new))
+    end
   end
 
   def edit(conn, params) do

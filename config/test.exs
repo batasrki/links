@@ -22,4 +22,4 @@ config :links, Links.Repo,
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
-config :pbkdf2_elixir, rounds: 1
+config :links, ecto_repos: [Links.Repo]

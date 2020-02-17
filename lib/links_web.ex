@@ -41,6 +41,7 @@ defmodule LinksWeb do
       import LinksWeb.Router.Helpers
       import LinksWeb.ErrorHelpers
       import LinksWeb.Gettext
+      import LinksWeb.AuthHelper
     end
   end
 

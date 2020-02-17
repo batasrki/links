@@ -18,12 +18,25 @@ defmodule LinksWeb.Router do
     pipe_through(:browser)
 
     resources("/links", LinkController)
-    get("/", LinkController, :index)
+    resources("/users", UserController, only: [:index, :show, :edit, :update])
+    resources("/registrations", RegistrationController, only: [:new, :create])
+
+    resources("/login_requests", LoginRequestController,
+      only: [:new, :create, :show],
+      param: "token"
+    )
+
+    get("/", LoginRequestController, :new)
+    get("/register", RegistrationController, :new)
   end
 
   scope "/api", LinksWeb do
     pipe_through(:api)
 
     get("/", ApiController, :index)
+  end
+
+  if Mix.env() == :dev do
+    forward("/sent-emails", Bamboo.SentEmailViewerPlug)
   end
 end
