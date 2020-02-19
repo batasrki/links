@@ -33,10 +33,10 @@ config :logger, level: :info
 
 config :links, Links.Mailer,
   adapter: Bamboo.SendGridAdapter,
-  api_key: System.get_env("SENDGRID_API_KEY"0
+  api_key: {:links, :sendgrid_api_key}
 
 config :links, ecto_repos: [Links.Repo]
-config :links, login_request_salt: System.get_env("SECRET_KEY_BASE")
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key
