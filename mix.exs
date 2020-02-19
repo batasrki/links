@@ -12,6 +12,7 @@ defmodule Links.Mixfile do
       deps: deps(),
       releases: [
         prod: [
+          include_executables_for: [:unix],
           steps: [:assemble, &do_nothing/1, :tar]
         ]
       ]
