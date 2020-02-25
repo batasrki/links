@@ -45,7 +45,7 @@ defmodule LinksWeb.LinkController do
 
     case result do
       {:ok, _} ->
-        redirect(conn, to: "/")
+        redirect(conn, to: link_path(conn, :index, get_session(conn, :config_params)))
 
       {:error, changeset} ->
         conn
@@ -58,7 +58,7 @@ defmodule LinksWeb.LinkController do
 
     case result do
       {:ok, _} ->
-        redirect(conn, to: "/")
+        redirect(conn, to: link_path(conn, :index, get_session(conn, :config_params)))
 
       {:error, changeset} ->
         message =
