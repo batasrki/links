@@ -34,7 +34,7 @@ defmodule LinksWeb.LinkController do
     link = LinkReader.by_id_for_editing(params["id"])
 
     case link do
-      nil -> render(conn, "404.html")
+      {:error, :not_found} -> render(conn, "404.html")
       _ -> render(conn, "edit.html", link: link)
     end
   end

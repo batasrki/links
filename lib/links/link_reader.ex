@@ -54,7 +54,11 @@ defmodule Links.LinkReader do
   end
 
   def by_id_for_editing(id) do
-    link = Link.find_by_id(String.to_integer(id))
-    Links.Link.update_changeset(link, %{})
+    try do
+      link = Link.find_by_id(String.to_integer(id))
+      Links.Link.update_changeset(link, %{})
+    rescue
+      _e in Ecto.NoResultsError -> {:error, :not_found}
+    end
   end
 end
