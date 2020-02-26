@@ -49,22 +49,20 @@
     </fieldset>
   <% end %>
   <hr>
-  <%= for posted <- @links do %>
-    <div class="row">
-      <%= for link <- posted do %>
-        <div class="card col-xs-3 m-3 <%= archived?(link) %>">
-          <div class="card-body">
-            <h4 class="card-title">
-              <a target="_blank" href="<%= link.url %>"><%= link.title %></a>
-            </h4>
-            <div class="card-text">
-              <p>Added at: <%= link.added_at %></p>
-              <small>By: <%= link.client %></small>
-              <small><a href="<%= link_path(@conn, :edit, link.id) %>">Edit</a></small>
-            </div>
+  <div class="cards">
+    <%= for link <- @links do %>
+      <div class="card <%= archived?(link) %>">
+        <div class="card-body">
+          <h4 class="card-title">
+            <a target="_blank" href="<%= link.url %>"><%= link.title %></a>
+          </h4>
+          <div class="card-text">
+            <p>Added at: <%= link.added_at %></p>
+            <small>By: <%= link.client %></small>
+            <small><a href="<%= link_path(@conn, :edit, link.id) %>">Edit</a></small>
           </div>
         </div>
-      <% end %>
-    </div>
-  <% end %>
+      </div>
+    <% end %>
+  </div>
 </section>
