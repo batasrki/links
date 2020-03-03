@@ -1,5 +1,8 @@
 # Links
 
+## Status of a build
+![Elixir CI](https://github.com/batasrki/links/workflows/Elixir%20CI/badge.svg)
+
 ## Build for release
 
 To build for a release, run the following commands from the root directory:
