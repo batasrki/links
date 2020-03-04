@@ -14,6 +14,9 @@ jobs:
       with:
         elixir-version: 1.9.4 # Define the elixir version [required]
         otp-version: 22.2 # Define the OTP version [required]
+    - name: Environment variables
+      env:
+        SECRET_KEY_BASE: "4hGbXgxNiXzI64xSLTiGuYHOKCWcq5gHMeuA+psWMxRQtq9hlj2Fy3t0SeU/feVA"
     - name: Install Dependencies
       run: mix deps.get
     - name: Run Tests
