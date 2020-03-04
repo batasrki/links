@@ -16,8 +16,6 @@ config :links, LinksWeb.Endpoint,
 config :logger, level: :warn
 
 config :links, Links.Repo,
-  username: "srdjan",
-  password: "srkijevo",
   database: "links_repo_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
@@ -26,6 +24,10 @@ if System.get_env("GITHUB_ACTIONS") do
   config :links, Links.Repo,
     username: "postgres",
     password: "postgres"
+else
+  config :links, Links.Repo,
+    username: "srdjan",
+    password: "srkijevo",
 end
 
 config :links, ecto_repos: [Links.Repo]
