@@ -23,3 +23,5 @@ config :links, Links.Repo,
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :links, ecto_repos: [Links.Repo]
+config :links, Links.Mailer, adapter: Bamboo.LocalAdapter
+config :links, login_request_salt: "this is a salt! use it carefully?"
