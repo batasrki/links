@@ -16,11 +16,17 @@ config :links, LinksWeb.Endpoint,
 config :logger, level: :warn
 
 config :links, Links.Repo,
-  username: System.get_env("POSTGRES_USER") || "srdjan",
-  password: System.get_env("POSTGRES_PASSWORD") || "srkijevo",
+  username: "srdjan",
+  password: "srkijevo",
   database: "links_repo_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+if System.get_env("GITHUB_ACTIONS") do
+  config :links, Links.Repo,
+    username: "postgres",
+    password: "postgres"
+end
 
 config :links, ecto_repos: [Links.Repo]
 config :links, Links.Mailer, adapter: Bamboo.LocalAdapter
