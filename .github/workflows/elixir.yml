@@ -7,6 +7,21 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_HOST: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: links_repo_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
     - uses: actions/checkout@v2
     - name: Setup elixir
@@ -20,3 +35,5 @@ jobs:
       run: mix test
       env:
         SECRET_KEY_BASE: "SALTy salt"
+        POSTGRES_HOST: postgres
+        POSTGRES_PORT: 5432
