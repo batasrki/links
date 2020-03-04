@@ -19,7 +19,7 @@ config :links, Links.Repo,
   username: System.get_env("POSTGRES_USER") || "srdjan",
   password: System.get_env("POSTGRES_PASSWORD") || "srkijevo",
   database: "links_repo_test",
-  hostname: System.get_env("POSTGRES_HOST") || "localhost",
+  hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :links, ecto_repos: [Links.Repo]
