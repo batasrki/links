@@ -12,7 +12,7 @@ jobs:
         image: postgres
         env:
           POSTGRES_HOST: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: srkijevo
           POSTGRES_DB: links_repo_test
         options: >-
           --health-cmd pg_isready
@@ -35,5 +35,5 @@ jobs:
       run: mix test
       env:
         SECRET_KEY_BASE: "SALTy salt"
-        POSTGRES_HOST: postgres
+        POSTGRES_HOST: srdjan
         POSTGRES_PORT: 5432
