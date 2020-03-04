@@ -16,10 +16,10 @@ config :links, LinksWeb.Endpoint,
 config :logger, level: :warn
 
 config :links, Links.Repo,
-  username: "srdjan",
-  password: "srkijevo",
+  username: System.get_env("POSTGRES_USER") || "srdjan",
+  password: System.get_env("POSTGRES_PASSWORD") || "srkijevo",
   database: "links_repo_test",
-  hostname: "localhost",
+  hostname: System.get_env("POSTGRES_HOST") || "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :links, ecto_repos: [Links.Repo]
