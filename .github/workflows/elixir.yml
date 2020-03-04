@@ -33,13 +33,13 @@ jobs:
     - name: Install Dependencies
       run: mix deps.get
     - name: Run Tests
-      run: |
-        mix ecto.create
-        mix ecto.migrate
-        mix test
       env:
         SECRET_KEY_BASE: "SALTy salt"
         POSTGRES_HOST: postgres
         POSTGRES_USER: postgres
         POSTGRES_PASSWORD: postgres
         POSTGRES_PORT: 5432
+      run: |
+        mix ecto.create
+        mix ecto.migrate
+        mix test
