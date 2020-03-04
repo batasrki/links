@@ -27,7 +27,7 @@ if System.get_env("GITHUB_ACTIONS") do
 else
   config :links, Links.Repo,
     username: "srdjan",
-    password: "srkijevo",
+    password: "srkijevo"
 end
 
 config :links, ecto_repos: [Links.Repo]
