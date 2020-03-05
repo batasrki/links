@@ -22,7 +22,9 @@ defmodule LinksWeb.LinkControllerTest do
       title: "How To Seed the Test DB",
       state: "active",
       added_at: DateTime.utc_now() |> DateTime.truncate(:second),
-      client: "test client"
+      client: "test client",
+      inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
+      updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
     }
 
     Links.Repo.insert_all(Links.Link, [link], returning: [:id])

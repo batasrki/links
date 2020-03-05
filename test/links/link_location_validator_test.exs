@@ -60,28 +60,36 @@ defmodule Links.TestLinkLocationValidator do
         title: "This link 404s",
         state: "active",
         added_at: DateTime.utc_now() |> DateTime.truncate(:second),
-        client: "test client"
+        client: "test client",
+        inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
       },
       %{
         url: "http://localhost:8081/test/301.html",
         title: "This link 301s",
         state: "active",
         added_at: DateTime.utc_now() |> DateTime.truncate(:second),
-        client: "test client"
+        client: "test client",
+        inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
       },
       %{
         url: "http://localhost:8081/test/302.html",
         title: "This link 302s",
         state: "active",
         added_at: DateTime.utc_now() |> DateTime.truncate(:second),
-        client: "test client"
+        client: "test client",
+        inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
       },
       %{
         url: "http://localhost:8081/test/500.html",
         title: "This link 500s",
         state: "active",
         added_at: DateTime.utc_now() |> DateTime.truncate(:second),
-        client: "test client"
+        client: "test client",
+        inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
       }
     ]
 

@@ -69,7 +69,9 @@ defmodule Links.TestLinkMutator do
         title: "This link 404s",
         state: "active",
         added_at: DateTime.utc_now() |> DateTime.truncate(:second),
-        client: "not found client"
+        client: "not found client",
+        inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
       }
     ]
 

@@ -51,21 +51,27 @@ defmodule Links.TestLinkTitleFetcher do
         title: "http://localhost:8081/test/howto.html",
         state: "active",
         added_at: DateTime.utc_now() |> DateTime.truncate(:second),
-        client: "test client"
+        client: "test client",
+        inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
       },
       %{
         url: "http://localhost:8081/test/howto1.html",
         title: "http://localhost:8081/test/howto1.html",
         state: "active",
         added_at: DateTime.utc_now() |> DateTime.truncate(:second),
-        client: "test client"
+        client: "test client",
+        inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
       },
       %{
         url: "http://localhost:8081/test/404.html",
         title: "This link 404s",
         state: "active",
         added_at: DateTime.utc_now() |> DateTime.truncate(:second),
-        client: "test client"
+        client: "test client",
+        inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
       }
     ]
 

@@ -85,6 +85,7 @@ defmodule Links.TestRepo do
     params = %{
       url: "http://localhost:8081/test/creation.html",
       client: "test client",
+      title: "http://localhost:8081/test/creation.html",
       added_at: DateTime.utc_now() |> DateTime.truncate(:second)
     }
 
@@ -96,6 +97,7 @@ defmodule Links.TestRepo do
     params = %{
       url: "garbage",
       client: "test client",
+      title: "garbage",
       added_at: DateTime.utc_now() |> DateTime.truncate(:second)
     }
 
@@ -107,6 +109,7 @@ defmodule Links.TestRepo do
     params = %{
       url: "",
       client: "test client",
+      title: "",
       added_at: DateTime.utc_now() |> DateTime.truncate(:second)
     }
 
@@ -117,6 +120,7 @@ defmodule Links.TestRepo do
   test "creating a link with a duplicate URL doesn't work" do
     params = %{
       url: "http://localhost:8081/test/creation.html",
+      title: "http://localhost:8081/test/creation.html",
       client: "test client",
       added_at: DateTime.utc_now() |> DateTime.truncate(:second)
     }
@@ -151,28 +155,36 @@ defmodule Links.TestRepo do
         title: "How To Seed the Test DB",
         state: "active",
         added_at: DateTime.utc_now() |> DateTime.truncate(:second),
-        client: "test client"
+        client: "test client",
+        inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
       },
       %{
         url: "http://localhost:8081/test/403.html",
         title: "How To Seed the Test DB",
         state: "active",
         added_at: DateTime.utc_now() |> DateTime.truncate(:second),
-        client: "test client"
+        client: "test client",
+        inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
       },
       %{
         url: "http://localhost:8081/test/404.html",
         title: "This one 404s",
         state: "active",
         added_at: DateTime.utc_now() |> DateTime.truncate(:second),
-        client: "test client"
+        client: "test client",
+        inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
       },
       %{
         url: "http://localhost:8081/test/429.html",
         title: "This one hits a rate limit",
         state: "active",
         added_at: DateTime.utc_now() |> DateTime.truncate(:second),
-        client: "test client"
+        client: "test client",
+        inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
       }
     ]
 
