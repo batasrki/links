@@ -39,7 +39,9 @@ defmodule LinksWeb.RegistrationControllerTest do
   defp create_user() do
     user = %{
       username: "tester",
-      email: "tester@example.com"
+      email: "tester@example.com",
+      inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
+      updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
     }
 
     Links.Repo.insert_all(Links.User, [user])

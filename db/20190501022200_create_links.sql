@@ -5,6 +5,6 @@ CREATE TABLE links(
     client VARCHAR(50),
     added_at TIMESTAMP WITH TIME ZONE,
     archive BOOLEAN DEFAULT FALSE,
-    inserted_at TIMESTAMP WITH TIME ZONE,
-    updated_at TIMESTAMP WITH TIME ZONE
+    inserted_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL
 );
