@@ -26,6 +26,11 @@ defmodule Links.Accounts.User do
     Links.Repo.insert(changeset)
   end
 
+  def create_for_session(params) do
+    changeset = __MODULE__.create_changeset(%Links.Accounts.User{}, params)
+    Links.Repo.insert(changeset)
+  end
+
   def create_changeset(user, params) do
     user
     |> cast(params, [:username, :email])

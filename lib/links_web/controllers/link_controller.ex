@@ -29,11 +29,18 @@ defmodule LinksWeb.LinkController do
   end
 
   def edit(conn, params) do
-    link = LinkReader.by_id_for_editing(params["id"])
+    if LinksWeb.AuthHelper.logged_in?(conn) do
+      link = LinkReader.by_id_for_editing(params["id"])
 
-    case link do
-      {:error, :not_found} -> render(conn, "404.html")
-      _ -> render(conn, "edit.html", link: link)
+      case link do
+        {:error, :not_found} ->
+          conn |> put_status(:not_found) |> put_view(LinksWeb.ErrorView) |> render("404.html")
+
+        _ ->
+          render(conn, "edit.html", link: link)
+      end
+    else
+      redirect(conn, to: login_request_path(conn, :new))
     end
   end
 
