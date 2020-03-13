@@ -33,6 +33,17 @@ defmodule Links.TestLinkTitleFetcher do
     assert updated_record.url != updated_record.title
   end
 
+  test "fetching a title from a gzipped page updates the saved record" do
+    url_to_fetch = %{url: "http://localhost:8081/test/gzipped.html"}
+    record = Link.find_by_url(url_to_fetch.url)
+
+    assert url_to_fetch.url == record.url
+    LinkTitleFetcher.get_title(url_to_fetch)
+
+    updated_record = Link.find_by_id(record.id)
+    assert updated_record.url != updated_record.title
+  end
+
   test "getting a 404 while fetching the title archives the link" do
     url_to_fetch = %{url: "http://localhost:8081/test/404.html"}
     record = Link.find_by_url(url_to_fetch.url)
@@ -67,6 +78,15 @@ defmodule Links.TestLinkTitleFetcher do
       %{
         url: "http://localhost:8081/test/404.html",
         title: "This link 404s",
+        state: "active",
+        added_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        client: "test client",
+        inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
+      },
+      %{
+        url: "http://localhost:8081/test/gzipped.html",
+        title: "http://localhost:8081/test/gzipped.html",
         state: "active",
         added_at: DateTime.utc_now() |> DateTime.truncate(:second),
         client: "test client",

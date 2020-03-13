@@ -4,8 +4,18 @@ defmodule Links.LinkTitleFetcher do
 
   def get_title(params) do
     case HTTPoison.get(params.url) do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        title = parse_title_tag(body)
+      {:ok, %HTTPoison.Response{status_code: 200, body: body, headers: headers}} ->
+        title =
+          case gzipped_content?(headers) do
+            true ->
+              body
+              |> unzip()
+              |> parse_title_tag()
+
+            false ->
+              body
+              |> parse_title_tag()
+          end
 
         link = Link.find_by_url(params.url)
         Link.update(link, %{title: title})
@@ -41,5 +51,18 @@ defmodule Links.LinkTitleFetcher do
     {"Location", new_location} = location_header
     params = Map.put(params, :new_url, new_location)
     Links.CrawlerService.update_link_location(params)
+  end
+
+  defp gzipped_content?(headers) do
+    !is_nil(
+      Enum.find(headers, fn {header_name, header_value} ->
+        (header_name == "Content-Encoding" || header_name == "content-encoding") &&
+          header_value == "gzip"
+      end)
+    )
+  end
+
+  defp unzip(body) do
+    :zlib.gunzip(body)
   end
 end

@@ -57,4 +57,21 @@ defmodule Links.MockController do
     Process.sleep(:infinity)
     Plug.Conn.send_resp(conn, 500, "Server error")
   end
+
+  get "/test/gzipped.html" do
+    body = """
+    <html>
+      <head>
+        <title data-rh="true">\n    \n    How To Mock a Server Response\n    \n  </title>
+      </head>
+      <body>
+        <p>Does this work?</p>
+      </body>
+    </html>
+    """
+
+    conn
+    |> Plug.Conn.put_resp_header("content-encoding", "gzip")
+    |> Plug.Conn.send_resp(200, :zlib.gzip(body))
+  end
 end
