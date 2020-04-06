@@ -4,7 +4,9 @@ defmodule LinksWeb.LinkController do
   alias Links.{LinkReader, LinkMutator}
 
   def index(conn, params) do
-    if LinksWeb.AuthHelper.logged_in?(conn) do
+    session = LinksWeb.AuthHelper.logged_in?(conn)
+
+    if session do
       previous_config_params = get_session(conn, :config_params) || %{}
 
       atom_params =
@@ -15,7 +17,7 @@ defmodule LinksWeb.LinkController do
 
       previous_config_params =
         if Enum.empty?(atom_params) do
-          %{sort_direction: "asc"}
+          %{sort_direction: "asc", user_id: session.user_id}
         else
           previous_config_params
         end

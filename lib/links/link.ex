@@ -9,26 +9,26 @@ defmodule Links.Link do
     field(:client, :string)
     field(:added_at, :utc_datetime)
     field(:state, :string)
+    belongs_to(:user, Links.User)
     timestamps(type: :utc_datetime)
   end
 
   ## Queries block ##
-  def list(filter_pagination_config) do
-    sort_direction = from_config(filter_pagination_config)
+  def list(filter_config, pagination_config) do
+    sort_direction = from_config(pagination_config)
     query = __MODULE__ |> order_by(^sort_direction)
 
-    query = paginate(query, filter_pagination_config)
+    query = paginate(query, pagination_config)
 
-    query = filter(query, filter_pagination_config)
+    query = build_filter(query, filter_config)
 
     # Debugging code
     {generated_sql, params} = Ecto.Adapters.SQL.to_sql(:all, Links.Repo, query)
     Logger.info(generated_sql)
     Logger.info(inspect(params))
 
-    Logger.info(
-      Enum.join(Enum.map(filter_pagination_config, fn {k, v} -> "#{k} => #{v}" end), "; ")
-    )
+    Logger.info(Enum.join(Enum.map(filter_config, fn {k, v} -> "#{k} => #{v}" end), "; "))
+    Logger.info(Enum.join(Enum.map(pagination_config, fn {k, v} -> "#{k} => #{v}" end), "; "))
 
     query |> Links.Repo.all()
   end
@@ -56,6 +56,17 @@ defmodule Links.Link do
 
   defp paginate(query, _) do
     query
+  end
+
+  defp build_filter(query, filter_config) do
+    {user_id_map, _} = Map.split(filter_config, [:user_id])
+    filter_config = Map.delete(filter_config, :user_id)
+    query = filter(query, user_id_map)
+    filter(query, filter_config)
+  end
+
+  defp filter(query, %{user_id: user_id}) do
+    query |> where([link], link.user_id == ^user_id)
   end
 
   defp filter(query, %{state: nil}) do

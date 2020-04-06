@@ -6,6 +6,7 @@ defmodule Links.User do
   schema "users" do
     field(:username, :string)
     field(:email, :string)
+    has_many(:links, Links.Link)
     timestamps(type: :utc_datetime)
   end
 

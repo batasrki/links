@@ -134,13 +134,13 @@ defmodule Links.TestRepo do
   end
 
   test "result limiting code works" do
-    items = Link.list(%{per_page: 1, sort_direction: "asc"})
+    items = Link.list(%{}, %{per_page: 1, sort_direction: "asc"})
     assert 1 == Enum.count(items)
   end
 
   test "pagination code works" do
     link = Link.find_by_url("http://localhost:8081/test/howto.html")
-    items = Link.list(%{per_page: 1, after: link.id, sort_direction: "asc"})
+    items = Link.list(%{}, %{per_page: 1, after: link.id, sort_direction: "asc"})
 
     fetched_link = items |> Enum.at(0)
 

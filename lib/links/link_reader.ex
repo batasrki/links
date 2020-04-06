@@ -1,29 +1,33 @@
 defmodule Links.LinkReader do
   alias Links.Link
 
-  def to_list(pagination_config) do
-    filter_pagination_config = %{
-      sort_direction: Map.get(pagination_config, :sort_direction, "asc")
+  def to_list(filter_pagination_config) do
+    filter_config = %{
+      user_id: Map.get(filter_pagination_config, :user_id, nil)
     }
 
-    filter_pagination_config =
+    pagination_config = %{
+      sort_direction: Map.get(filter_pagination_config, :sort_direction, "asc")
+    }
+
+    filter_config =
       Map.put(
-        filter_pagination_config,
+        filter_config,
         :state,
-        convert_from(pagination_config, :state)
+        convert_from(filter_pagination_config, :state)
       )
 
-    filter_pagination_config =
+    pagination_config =
       Map.put(
-        filter_pagination_config,
+        pagination_config,
         :per_page,
-        convert_from(pagination_config, :per_page)
+        convert_from(filter_pagination_config, :per_page)
       )
 
-    filter_pagination_config =
-      Map.put(filter_pagination_config, :page, convert_from(pagination_config, :page))
+    pagination_config =
+      Map.put(pagination_config, :page, convert_from(filter_pagination_config, :page))
 
-    Link.list(filter_pagination_config)
+    Link.list(filter_config, pagination_config)
   end
 
   defp convert_from(pagination_config, :state) do
@@ -39,10 +43,6 @@ defmodule Links.LinkReader do
       {:ok, ""} -> nil
       {:ok, val} -> String.to_integer(val)
     end
-  end
-
-  def to_list() do
-    Link.list(%{})
   end
 
   def to_json_list(params) do

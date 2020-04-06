@@ -41,7 +41,7 @@ defmodule Links.CrawlerService do
 
   @impl GenServer
   def handle_cast(:validate_links_urls, state) do
-    Link.list(%{sort_direction: "asc"})
+    Link.list(%{}, %{sort_direction: "asc"})
     |> Enum.each(fn link -> Links.LinkLocationValidator.validate(link) end)
 
     {:noreply, state}

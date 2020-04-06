@@ -32,8 +32,6 @@ defmodule LinksWeb.Router do
 
   scope "/api", LinksWeb do
     pipe_through(:api)
-
-    get("/", ApiController, :index)
   end
 
   if Mix.env() == :dev do
