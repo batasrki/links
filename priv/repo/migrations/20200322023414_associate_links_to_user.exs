@@ -4,7 +4,7 @@ defmodule Links.Repo.Migrations.AssociateLinksToUser do
 
   def up do
     alter(table(:links)) do
-      remove(:users_id)
+      remove_if_exists(:users_id)
       add(:user_id, references(:users), null: true)
     end
 
