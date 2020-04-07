@@ -65,4 +65,8 @@
       </div>
     <% end %>
   </div>
+  <hr>
+  <div class="nav">
+    <a href="<%= link_path(@conn, :index, after: @last_record.id) %>">Next</a>
+  </div>
 </section>

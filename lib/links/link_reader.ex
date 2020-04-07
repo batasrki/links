@@ -25,7 +25,7 @@ defmodule Links.LinkReader do
       )
 
     pagination_config =
-      Map.put(pagination_config, :page, convert_from(filter_pagination_config, :page))
+      Map.put(pagination_config, :after, convert_from(filter_pagination_config, :after))
 
     Link.list(filter_config, pagination_config)
   end

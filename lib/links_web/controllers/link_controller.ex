@@ -23,8 +23,9 @@ defmodule LinksWeb.LinkController do
         end
 
       conn = put_session(conn, :config_params, Map.merge(previous_config_params, atom_params))
-
-      render(conn, "index.html", links: LinkReader.to_list(get_session(conn, :config_params)))
+      links = LinkReader.to_list(get_session(conn, :config_params))
+      last_record = Enum.reverse(links) |> Enum.at(0)
+      render(conn, "index.html", links: links, last_record: last_record)
     else
       redirect(conn, to: login_request_path(conn, :new))
     end
