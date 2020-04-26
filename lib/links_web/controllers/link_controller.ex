@@ -47,17 +47,19 @@ defmodule LinksWeb.LinkController do
     end
   end
 
-    def update(conn, params) do
-    link = LinkReader.by_id_for_editing(params["id"])
-    result = LinkMutator.update(link.data, Map.take(params["link"], ["title", "client", "url"]))
+  def update(conn, params) do
+    if LinksWeb.AuthHelper.logged_in?(conn) do
+      link = LinkReader.by_id_for_editing(params["id"])
+      result = LinkMutator.update(link.data, Map.take(params["link"], ["title", "client", "url"]))
 
-    case result do
-      {:ok, _} ->
-        redirect(conn, to: link_path(conn, :index, get_session(conn, :config_params)))
+      case result do
+        {:ok, _} ->
+          redirect(conn, to: link_path(conn, :index, get_session(conn, :config_params)))
 
-      {:error, changeset} ->
-        conn
-        |> render("edit.html", link: changeset)
+        {:error, changeset} ->
+          conn
+          |> render("edit.html", link: changeset)
+      end
     end
   end
   def create(conn, params) do
@@ -67,7 +69,6 @@ defmodule LinksWeb.LinkController do
       link_params = Map.take(params, ["title", "client", "url"])
                     |> Map.merge(%{"user_id" => session.user_id})
 
-      # raise link_params
       result = LinkMutator.create(link_params)
 
       case result do

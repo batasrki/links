@@ -18,7 +18,6 @@ defmodule LinksWeb.Router do
     pipe_through(:browser)
 
     resources("/links", LinkController)
-    resources("/users", UserController, only: [:index, :show, :edit, :update])
     resources("/registrations", RegistrationController, only: [:new, :create])
 
     resources("/login_requests", LoginRequestController,
