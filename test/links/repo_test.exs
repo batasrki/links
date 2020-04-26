@@ -1,13 +1,14 @@
 defmodule Links.TestRepo do
   use ExUnit.Case
-  alias Links.{Repo, Link}
+  alias Links.{Repo, Link, User}
 
   setup do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)
-    seed_table()
+    seed_tables()
 
     on_exit(fn ->
       Repo.delete_all(Link)
+      Repo.delete_all(User)
     end)
   end
 
@@ -82,11 +83,14 @@ defmodule Links.TestRepo do
   end
 
   test "creating a link works" do
+    user = Repo.one!(User)
+
     params = %{
       url: "http://localhost:8081/test/creation.html",
       client: "test client",
       title: "http://localhost:8081/test/creation.html",
-      added_at: DateTime.utc_now() |> DateTime.truncate(:second)
+      added_at: DateTime.utc_now() |> DateTime.truncate(:second),
+      user_id: user.id
     }
 
     {:ok, result} = Link.create(params)
@@ -118,11 +122,14 @@ defmodule Links.TestRepo do
   end
 
   test "creating a link with a duplicate URL doesn't work" do
+    user = Repo.one!(User)
+
     params = %{
       url: "http://localhost:8081/test/creation.html",
       title: "http://localhost:8081/test/creation.html",
       client: "test client",
-      added_at: DateTime.utc_now() |> DateTime.truncate(:second)
+      added_at: DateTime.utc_now() |> DateTime.truncate(:second),
+      user_id: user.id
     }
 
     _valid = Link.create(params)
@@ -148,7 +155,9 @@ defmodule Links.TestRepo do
     assert "http://localhost:8081/test/403.html" == fetched_link.url
   end
 
-  defp seed_table do
+  defp seed_tables do
+    user = Repo.insert!(%User{email: "test@example.com", username: "tester"})
+
     links = [
       %{
         url: "http://localhost:8081/test/howto.html",
@@ -157,7 +166,8 @@ defmodule Links.TestRepo do
         added_at: DateTime.utc_now() |> DateTime.truncate(:second),
         client: "test client",
         inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
-        updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
+        updated_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        user_id: user.id
       },
       %{
         url: "http://localhost:8081/test/403.html",
@@ -166,7 +176,8 @@ defmodule Links.TestRepo do
         added_at: DateTime.utc_now() |> DateTime.truncate(:second),
         client: "test client",
         inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
-        updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
+        updated_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        user_id: user.id
       },
       %{
         url: "http://localhost:8081/test/404.html",
@@ -175,7 +186,8 @@ defmodule Links.TestRepo do
         added_at: DateTime.utc_now() |> DateTime.truncate(:second),
         client: "test client",
         inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
-        updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
+        updated_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        user_id: user.id
       },
       %{
         url: "http://localhost:8081/test/429.html",
@@ -184,7 +196,8 @@ defmodule Links.TestRepo do
         added_at: DateTime.utc_now() |> DateTime.truncate(:second),
         client: "test client",
         inserted_at: DateTime.utc_now() |> DateTime.truncate(:second),
-        updated_at: DateTime.utc_now() |> DateTime.truncate(:second)
+        updated_at: DateTime.utc_now() |> DateTime.truncate(:second),
+        user_id: user.id
       }
     ]
 

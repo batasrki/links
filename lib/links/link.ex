@@ -111,8 +111,8 @@ defmodule Links.Link do
 
   def create_changeset(link, params) do
     link
-    |> cast(params, [:url, :client, :added_at, :title, :state])
-    |> validate_required([:url, :client])
+    |> cast(params, [:url, :client, :added_at, :title, :state, :user_id])
+    |> validate_required([:url, :client, :user_id])
     |> validate_format(:url, ~r/^http/)
     |> unique_constraint(:url)
   end

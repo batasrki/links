@@ -47,7 +47,7 @@ defmodule LinksWeb.LinkController do
     end
   end
 
-  def update(conn, params) do
+    def update(conn, params) do
     link = LinkReader.by_id_for_editing(params["id"])
     result = LinkMutator.update(link.data, Map.take(params["link"], ["title", "client", "url"]))
 
@@ -60,26 +60,34 @@ defmodule LinksWeb.LinkController do
         |> render("edit.html", link: changeset)
     end
   end
-
   def create(conn, params) do
-    result = LinkMutator.create(Map.take(params, ["title", "client", "url"]))
+    session = LinksWeb.AuthHelper.logged_in?(conn)
 
-    case result do
-      {:ok, _} ->
-        redirect(conn, to: link_path(conn, :index, get_session(conn, :config_params)))
+    if session do
+      link_params = Map.take(params, ["title", "client", "url"])
+                    |> Map.merge(%{"user_id" => session.user_id})
 
-      {:error, changeset} ->
-        message =
-          for {k, v} <- changeset.errors, into: "" do
-            {msg, _} = v
-            "#{k} #{msg}. "
-          end
+      # raise link_params
+      result = LinkMutator.create(link_params)
 
-        conn
-        |> put_flash(:error, message)
-        |> render("index.html",
-          links: Enum.chunk_every(LinkReader.to_list(get_session(conn, :config_params)), 3)
-        )
+      case result do
+        {:ok, _} ->
+          redirect(conn, to: link_path(conn, :index, get_session(conn, :config_params)))
+
+        {:error, changeset} ->
+          message =
+            for {k, v} <- changeset.errors, into: "" do
+              {msg, _} = v
+              "#{k} #{msg}. "
+            end
+
+          conn
+          |> put_flash(:error, message)
+          |> render("index.html",
+            links: Enum.chunk_every(LinkReader.to_list(get_session(conn, :config_params)), 3)
+          )
+      end
+    else
     end
   end
 

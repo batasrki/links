@@ -30,3 +30,4 @@ rel/
 .mix/
 links.code-workspace
 cover/
+.vscode/
