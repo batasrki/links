@@ -60,6 +60,8 @@ defmodule LinksWeb.LinkController do
           conn
           |> render("edit.html", link: changeset)
       end
+    else
+      redirect(conn, to: login_request_path(conn, :new))
     end
   end
   def create(conn, params) do
@@ -89,6 +91,7 @@ defmodule LinksWeb.LinkController do
           )
       end
     else
+      redirect(conn, to: login_request_path(conn, :new))
     end
   end
 

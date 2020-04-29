@@ -1,39 +1,41 @@
 <section class="col-xs-12">
-  <h3>Stored URLs</h3>
-  <ul class="nav nav-pills">
-    <li class="nav-item">
-      <a class="nav-link" href="<%= link_path(@conn, :index) %>?sort_direction=asc">Oldest first</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="<%= link_path(@conn, :index) %>?sort_direction=desc">Newest first</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="<%= link_path(@conn, :index) %>?state=archived"">Archived</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="<%= link_path(@conn, :index) %>?state=active"">Active</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="<%= link_path(@conn, :index) %>">All</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="<%= link_path(@conn, :index) %>?per_page=10">10</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="<%= link_path(@conn, :index) %>?per_page=20">20</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="<%= link_path(@conn, :index) %>?per_page=50">50</a>
-    </li>
-<!--    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Display</a>
-      <div class="dropdown-menu">
-        <a class="dropdown-item" href="<%= link_path(@conn, :index) %>?per_page=10&page=1">10</a>
-        <a class="dropdown-item" href="<%= link_path(@conn, :index) %>?per_page=20&page=1">20</a>
-        <a class="dropdown-item" href="<%= link_path(@conn, :index) %>?per_page=50&page=1">50</a>
-      </div>
-    </li> -->
-  </ul>
+  <%= unless empty_set?(@links) do %>
+    <h3>Stored URLs</h3>
+    <ul class="nav nav-pills">
+      <li class="nav-item">
+        <a class="nav-link" href="<%= link_path(@conn, :index) %>?sort_direction=asc">Oldest first</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<%= link_path(@conn, :index) %>?sort_direction=desc">Newest first</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<%= link_path(@conn, :index) %>?state=archived"">Archived</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<%= link_path(@conn, :index) %>?state=active"">Active</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<%= link_path(@conn, :index) %>">All</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<%= link_path(@conn, :index) %>?per_page=10">10</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<%= link_path(@conn, :index) %>?per_page=20">20</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<%= link_path(@conn, :index) %>?per_page=50">50</a>
+      </li>
+  <!--    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Display</a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="<%= link_path(@conn, :index) %>?per_page=10&page=1">10</a>
+          <a class="dropdown-item" href="<%= link_path(@conn, :index) %>?per_page=20&page=1">20</a>
+          <a class="dropdown-item" href="<%= link_path(@conn, :index) %>?per_page=50&page=1">50</a>
+        </div>
+      </li> -->
+    </ul>
+  <% end %>
 
   <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
   <%= form_for @conn, link_path(@conn, :create), fn f -> %>
@@ -49,24 +51,30 @@
     </fieldset>
   <% end %>
   <hr>
-  <div class="cards">
-    <%= for link <- @links do %>
-      <div class="card <%= archived?(link) %>">
-        <div class="card-body">
-          <h4 class="card-title">
-            <a target="_blank" href="<%= link.url %>"><%= link.title %></a>
-          </h4>
-          <div class="card-text">
-            <p>Added at: <%= link.added_at %></p>
-            <small>By: <%= link.client %></small>
-            <small><a href="<%= link_path(@conn, :edit, link.id) %>">Edit</a></small>
+  <%= if empty_set?(@links) do %>
+    <div class="jumbotron">
+      <h2>No links right now. Go ahead and add one above!</h2>
+    </div>
+  <% else %>
+    <div class="cards">
+      <%= for link <- @links do %>
+        <div class="card <%= archived?(link) %>">
+          <div class="card-body">
+            <h4 class="card-title">
+              <a target="_blank" href="<%= link.url %>"><%= link.title %></a>
+            </h4>
+            <div class="card-text">
+              <p>Added at: <%= link.added_at %></p>
+              <small>By: <%= link.client %></small>
+              <small><a href="<%= link_path(@conn, :edit, link.id) %>">Edit</a></small>
+            </div>
           </div>
         </div>
-      </div>
-    <% end %>
-  </div>
-  <hr>
-  <div class="nav">
-    <a href="<%= link_path(@conn, :index, after: @last_record.id) %>">Next</a>
-  </div>
+      <% end %>
+    </div>
+    <hr>
+    <div class="nav">
+      <a href="<%= link_path(@conn, :index, after: @last_record.id) %>">Next</a>
+    </div>
+  <% end %>
 </section>
