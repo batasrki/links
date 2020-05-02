@@ -9,6 +9,7 @@ defmodule Links.Application do
     # Define workers and child supervisors to be supervised
     children = [
       # Start the endpoint when the application starts
+      {Phoenix.PubSub, [name: Links.PubSub, adapter: Phoenix.PubSub.PG2]},
       Links.Repo,
       LinksWeb.Endpoint,
       Links.CrawlerService

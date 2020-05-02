@@ -21,11 +21,7 @@ config :links, LinksWeb.Endpoint,
   root: ".",
   version: Application.spec(:links, :vsn),
   ssl: true,
-  pubsub: [
-    adapter: Phoenix.PubSub.PG2,
-    pool_size: 1,
-    name: Links.PubSub
-  ],
+  pubsub_server: Links.PubSub,
   check_origin: ["https://s2dd.ca", "https://www.s2dd.ca"]
 
 # Do not print debug messages in production

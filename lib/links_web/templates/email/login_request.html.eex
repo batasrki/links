@@ -1,3 +1,3 @@
 <p>Hello!</p>
 <p>Use the link below to log into your Links account.<strong>This link expires in 10 minutes.</strong></p>
-<p><%= link "Log into Links", to: login_request_url(LinksWeb.Endpoint, :show, @token), target: "_blank" %></p>
+<p><%= link "Log into Links", to: LinksWeb.Router.Helpers.login_request_url(LinksWeb.Endpoint, :show, @token), target: "_blank" %></p>

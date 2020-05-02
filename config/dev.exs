@@ -22,7 +22,7 @@ config :links, LinksWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "Cmj6dw5IQmdf5DKNAlCPqUmMsHvcsvOnoVWRF9UnIGUq2cMpKImlyo+W+G4hjK7u",
   render_errors: [view: LinksWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Links.PubSub, adapter: Phoenix.PubSub.PG2],
+  pubsub_server: Links.PubSub,
   live_reload: [
     patterns: [
       ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
