@@ -18,19 +18,27 @@ defmodule LinksWeb.ConnCase do
   using do
     quote do
       # Import conveniences for testing with connections
-      use Phoenix.ConnTest
-      import LinksWeb.Router.Helpers
+      import Plug.Conn
+      import Phoenix.ConnTest
+
+      alias LinksWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
       @endpoint LinksWeb.Endpoint
 
-      def session_conn() do
-        build_conn() |> Plug.Test.init_test_session(%{})
-      end
     end
   end
 
   setup _tags do
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Links.Repo)
+
+    on_exit(fn ->
+      Links.Repo.delete_all(Links.Link)
+      Links.Repo.delete_all(Links.User)
+      Links.Repo.delete_all(Links.Accounts.Session)
+    end)
+
+    # conn = Phoenix.ConnTest.build_conn() |> Plug.Test.init_test_session(%{})
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end

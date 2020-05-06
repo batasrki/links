@@ -47,7 +47,7 @@ defmodule Links.Mixfile do
       {:phoenix_html, "~> 2.11"},
       {:phoenix_ecto, "~> 4.0"},
       {:gettext, "~> 0.11"},
-      {:plug_cowboy, "~> 2.0"},
+      {:plug_cowboy, "~> 2.1"},
       {:cowboy, "~> 2.5"},
       {:distillery, "~> 2.0"},
       {:ecto_sql, "~>3.0"},

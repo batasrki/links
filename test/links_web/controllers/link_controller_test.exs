@@ -3,74 +3,55 @@ defmodule LinksWeb.LinkControllerTest do
 
   alias Links.{Link, User, Repo}
 
-  setup do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)
-
-    on_exit(fn ->
-      Repo.delete_all(Link)
-      Repo.delete_all(User)
-      Repo.delete_all(Links.Accounts.Session)
-    end)
+  setup %{conn: conn } do
+    {:ok, conn: conn, session: create_session() }
   end
 
   describe "index" do
     test "/index without being logged in, redirects", %{conn: conn} do
-      conn = get(conn, link_path(conn, :index))
+      conn = get(conn, Routes.link_path(conn, :index))
       assert html_response(conn, 302)
     end
 
-    test "/index while logged in but no links, shows empty state", %{conn: conn} do
-      session = create_session()
-
-      conn =
-        session_conn()
-        |> put_session(:session_id, session.id)
-        |> put_req_header("content-type", "text/html")
-        |> get(link_path(conn, :index))
+    test "/index while logged in but no links, shows empty state", %{conn: conn, session: session} do
+      conn = conn
+      |> init_test_session(%{session_id: session.id})
+      |> put_req_header("content-type", "text/html")
+      |> get(Routes.link_path(conn, :index))
 
       assert html_response(conn, 200) =~ "No links right now"
     end
 
-    test "/index while logged in and having a saved link, shows the link", %{conn: conn} do
+    test "/index while logged in and having a saved link, shows the link", %{conn: conn, session: session} do
        {_, links} = create_link()
       link = links |> hd()
-      session = create_session()
 
-      conn =
-        session_conn()
-        |> put_session(:session_id, session.id)
-        |> put_req_header("content-type", "text/html")
-        |> get(link_path(conn, :edit, link.id))
+      conn = conn
+      |> init_test_session(%{session_id: session.id})
+      |> put_req_header("content-type", "text/html")
+      |> get(Routes.link_path(conn, :edit, link.id))
 
       assert html_response(conn, 200) =~ "How To Seed the Test DB"
     end
   end
 
   describe "create" do
-    test "/create works when logged in", %{conn: conn} do
-      session = create_session()
+    test "/create works when logged in", %{conn: conn, session: session} do
       create_params = %{
         url: "https://www.example.com",
         client: "test client"
       }
 
-      csrf_token = Plug.CSRFProtection.get_csrf_token()
-
-      conn =
-        session_conn()
-        |> assign(:body_params, %{_csrf_token: csrf_token})
-        |> put_session(:session_id, session.id)
-        |> put_req_header("content-type", "text/html")
-        |> put_req_cookie("csrf_token", csrf_token)
-
-      IO.inspect(conn)
-      conn = post(conn, link_path(conn, :create, create_params))
+      conn = conn
+      |> init_test_session(%{session_id: session.id})
+      |> put_req_header("content-type", "text/html")
+      |> post(Routes.link_path(conn, :create, create_params))
 
       assert html_response(conn, 200) =~ "Updating the seed 1"
     end
 
     test "/create without being logged in redirects", %{conn: conn} do
-      conn = post(conn, link_path(conn, :create, %{title: "title"}))
+      conn = post(conn, Routes.link_path(conn, :create, %{title: "title"}))
       assert html_response(conn, 302)
     end
   end
@@ -85,7 +66,7 @@ defmodule LinksWeb.LinkControllerTest do
         session_conn()
         |> put_session(:session_id, session.id)
         |> put_req_header("content-type", "text/html")
-        |> get(link_path(conn, :edit, link.id))
+        |> get(Routes.link_path(conn, :edit, link.id))
 
       assert html_response(conn, 200) =~ "How To Seed the Test DB"
     end
@@ -97,7 +78,7 @@ defmodule LinksWeb.LinkControllerTest do
         session_conn()
         |> put_session(:session_id, session.id)
         |> put_req_header("content-type", "text/html")
-        |> get(link_path(conn, :edit, 2_147_483_647))
+        |> get(Routes.link_path(conn, :edit, 2_147_483_647))
 
       assert html_response(conn, 404) =~ "Not Found"
     end
@@ -105,7 +86,7 @@ defmodule LinksWeb.LinkControllerTest do
     test "/edit without being logged in redirects", %{conn: conn} do
       {_, links} = create_link()
       link = links |> hd()
-      conn = get(conn, link_path(conn, :edit, link.id))
+      conn = get(conn, Routes.link_path(conn, :edit, link.id))
       assert html_response(conn, 302)
     end
   end
@@ -124,7 +105,7 @@ defmodule LinksWeb.LinkControllerTest do
         |> put_session(:session_id, session.id)
         |> put_session("_csrf_token", Plug.CSRFProtection.get_csrf_token())
         |> put_req_header("content-type", "text/html")
-        |> put(link_path(conn, :update, link.id, link: update_params))
+        |> put(Routes.link_path(conn, :update, link.id, link: update_params))
 
       assert html_response(conn, 200) =~ "Updating the seed 1"
     end
@@ -136,7 +117,7 @@ defmodule LinksWeb.LinkControllerTest do
         session_conn()
         |> put_session(:session_id, session.id)
         |> put_req_header("content-type", "text/html")
-        |> put(link_path(conn, :update, 2_147_483_647, %{title: "title"}))
+        |> put(Routes.link_path(conn, :update, 2_147_483_647, %{title: "title"}))
 
       assert html_response(conn, 404) =~ "Not Found"
     end
@@ -144,7 +125,7 @@ defmodule LinksWeb.LinkControllerTest do
     test "/update without being logged in redirects", %{conn: conn} do
       {_, links} = create_link()
       link = links |> hd()
-      conn = put(conn, link_path(conn, :update, link.id, %{title: "title"}))
+      conn = put(conn, Routes.link_path(conn, :update, link.id, %{title: "title"}))
       assert html_response(conn, 302)
     end
   end
