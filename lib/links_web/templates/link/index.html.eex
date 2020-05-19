@@ -38,7 +38,7 @@
   <% end %>
 
   <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
-  <%= form_for @conn, link_path(@conn, :create), fn f -> %>
+  <%= form_for @changeset, link_path(@conn, :create), fn f -> %>
     <fieldset>
       <legend>Add a new link</legend>
       <div class="form-row col-xs-6">

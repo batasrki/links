@@ -1,22 +1,14 @@
 defmodule LinksWeb.RegistrationControllerTest do
   use LinksWeb.ConnCase
 
-  setup do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Links.Repo)
-
-    on_exit(fn ->
-      Links.Repo.delete_all(Links.User)
-    end)
-  end
-
   test "/create with no params", %{conn: conn} do
-    conn = post(conn, registration_path(conn, :create))
+    conn = post(conn, Routes.registration_path(conn, :create))
     assert html_response(conn, 200) =~ "email can&#39;t be blank;"
   end
 
   test "/create with good params", %{conn: conn} do
     conn =
-      post(conn, registration_path(conn, :create), %{
+      post(conn, Routes.registration_path(conn, :create), %{
         email: "tester@example.com",
         username: "tester"
       })
@@ -28,7 +20,7 @@ defmodule LinksWeb.RegistrationControllerTest do
     create_user()
 
     conn =
-      post(conn, registration_path(conn, :create), %{
+      post(conn, Routes.registration_path(conn, :create), %{
         email: "tester@example.com",
         username: "tester"
       })

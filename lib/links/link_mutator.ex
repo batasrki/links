@@ -24,4 +24,8 @@ defmodule Links.LinkMutator do
 
     result
   end
+
+  def change_link(%Links.Link{} = link, params \\ %{}) do
+    Links.Link.create_changeset(link, params)
+  end
 end
