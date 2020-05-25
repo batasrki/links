@@ -18,7 +18,7 @@ defmodule Links.Link do
     sort_direction = from_config(pagination_config)
     query = __MODULE__ |> order_by(^sort_direction)
 
-    query = paginate(query, pagination_config)
+    query = paginate(query, pagination_config, sort_direction)
 
     query = build_filter(query, filter_config)
 
@@ -41,20 +41,27 @@ defmodule Links.Link do
     [desc: :added_at]
   end
 
-  defp paginate(query, %{per_page: per_page, after: link_id})
+  defp paginate(query, %{per_page: per_page, after: link_id}, asc: :added_at)
        when is_number(per_page) and is_number(link_id) do
     query
     |> where([l], l.id > ^link_id)
     |> limit(^per_page)
   end
 
-  defp paginate(query, %{per_page: per_page})
+  defp paginate(query, %{per_page: per_page, after: link_id}, desc: :added_at)
+       when is_number(per_page) and is_number(link_id) do
+    query
+    |> where([l], l.id < ^link_id)
+    |> limit(^per_page)
+  end
+
+  defp paginate(query, %{per_page: per_page}, _)
        when is_number(per_page) do
     query
     |> limit(^per_page)
   end
 
-  defp paginate(query, _) do
+  defp paginate(query, _, _) do
     query
   end
 
