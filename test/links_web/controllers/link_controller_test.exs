@@ -163,6 +163,52 @@ defmodule LinksWeb.LinkControllerTest do
     end
   end
 
+  describe "delete" do
+    test "/delete works when logged in", %{conn: conn, session: session, user: user} do
+      {_, links} = create_link(%{user_id: user.id})
+      link = links |> hd()
+
+      conn =
+        conn
+        |> init_test_session(%{
+          session_id: session.id,
+          config_params: %{sort_direction: "asc", user_id: user.id}
+        })
+        |> put_req_header("content-type", "text/html")
+        |> delete(Routes.link_path(conn, :delete, link.id), link: %{})
+
+      expected_redir_path = "/links?sort_direction=asc&user_id=#{user.id}"
+
+      assert expected_redir_path == redirected_to(conn, 302)
+      conn = get(recycle(conn), expected_redir_path)
+      assert html_response(conn, 200) =~ "border-danger"
+    end
+
+    test "/delete of a non-existent link returns 404 page", %{
+      conn: conn,
+      session: session,
+      user: user
+    } do
+      conn =
+        conn
+        |> init_test_session(%{
+          session_id: session.id,
+          config_params: %{sort_direction: "asc", user_id: user.id}
+        })
+        |> put_req_header("content-type", "text/html")
+        |> delete(Routes.link_path(conn, :delete, 2_147_483_647), link: %{})
+
+      assert html_response(conn, 404) =~ "not found"
+    end
+
+    test "/delete without being logged in redirects", %{conn: conn} do
+      {_, links} = create_link()
+      link = links |> hd()
+      conn = delete(conn, Routes.link_path(conn, :delete, link.id), link: %{})
+      assert html_response(conn, 302)
+    end
+  end
+
   defp create_link(attrs \\ %{}) do
     link = %{
       url: "http://localhost:8081/test/howto.html",

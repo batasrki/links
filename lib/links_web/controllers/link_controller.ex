@@ -72,6 +72,28 @@ defmodule LinksWeb.LinkController do
     end
   end
 
+  def delete(conn, params) do
+    if LinksWeb.AuthHelper.logged_in?(conn) do
+      case LinkReader.by_id_for_editing(params["id"]) do
+        {:error, :not_found} ->
+          conn |> put_status(:not_found) |> render("404.html")
+
+        link ->
+          result = LinkMutator.update(link.data, %{"state" => "archived"})
+
+          case result do
+            {:ok, _} ->
+              redirect(conn, to: link_path(conn, :index, get_session(conn, :config_params)))
+
+            {:error, changeset} ->
+              conn |> render("edit.html", link: changeset)
+          end
+      end
+    else
+      redirect(conn, to: login_request_path(conn, :new))
+    end
+  end
+
   def create(conn, params) do
     session = LinksWeb.AuthHelper.logged_in?(conn)
 

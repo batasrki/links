@@ -28,8 +28,11 @@
                 <%= error_tag f, :url %>
             </div>
         </div>
-        
+
         <%= submit "Update", class: "btn btn-primary col-md-2" %>
-        
+
     <% end %>
+    <%= form_for @link, link_path(@conn, :delete, @link.data.id), [method: :delete, class: "d-lg-flex flex-row"], fn _ -> %>
+        <%= submit "Delete", class: "btn btn-danger col-md-2" %>
+    <% end  %>
 </section>
