@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-ENV REFRESHED_AT=2019-02-16 \
+ENV REFRESHED_AT=2020-09-07 \
   LANG=en_US.UTF-8 \
   HOME=/opt/build \
   TERM=xterm
