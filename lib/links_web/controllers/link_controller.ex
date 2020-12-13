@@ -118,7 +118,8 @@ defmodule LinksWeb.LinkController do
           conn
           |> put_flash(:error, message)
           |> render("index.html",
-            links: Enum.chunk_every(LinkReader.to_list(get_session(conn, :config_params)), 3)
+            links: Enum.chunk_every(LinkReader.to_list(get_session(conn, :config_params)), 3),
+            changeset: changeset
           )
       end
     else

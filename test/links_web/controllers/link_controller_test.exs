@@ -75,6 +75,30 @@ defmodule LinksWeb.LinkControllerTest do
       assert html_response(conn, 200) =~ "www.example.com"
     end
 
+    test "/create with a duplicate URL fails with error message", %{
+      conn: conn,
+      session: session,
+      user: user
+    } do
+      create_link()
+
+      create_params = %{
+        url: "http://localhost:8081/test/howto.html",
+        client: "test client"
+      }
+
+      conn =
+        conn
+        |> init_test_session(%{
+          session_id: session.id,
+          config_params: %{sort_direction: "asc", user_id: user.id}
+        })
+        |> put_req_header("content-type", "text/html")
+        |> post(Routes.link_path(conn, :create), link: create_params)
+
+      assert html_response(conn, 200) =~ "url has already been taken"
+    end
+
     test "/create without being logged in redirects", %{conn: conn} do
       conn = post(conn, Routes.link_path(conn, :create), link: %{title: "title"})
       assert html_response(conn, 302)
