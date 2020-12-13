@@ -103,6 +103,8 @@ defmodule LinksWeb.LinkController do
         |> Map.merge(%{"user_id" => session.user_id})
 
       result = LinkMutator.create(link_params)
+      links = LinkReader.to_list(get_session(conn, :config_params))
+      last_record = Enum.reverse(links) |> Enum.at(0)
 
       case result do
         {:ok, _} ->
@@ -118,8 +120,9 @@ defmodule LinksWeb.LinkController do
           conn
           |> put_flash(:error, message)
           |> render("index.html",
-            links: Enum.chunk_every(LinkReader.to_list(get_session(conn, :config_params)), 3),
-            changeset: changeset
+            links: links,
+            changeset: changeset,
+            last_record: last_record
           )
       end
     else

@@ -4,7 +4,7 @@ defmodule Links.Mixfile do
   def project do
     [
       app: :links,
-      version: "0.7.5",
+      version: "0.7.6",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
