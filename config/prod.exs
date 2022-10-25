@@ -15,7 +15,7 @@ use Mix.Config
 # which you typically run after static files are built.
 config :links, LinksWeb.Endpoint,
   http: [port: {:system, "PORT"}],
-  url: [host: "localhost", port: {:system, "PORT"}],
+  url: [host: "s2dd.ca", scheme: "https"],
   cache_static_manifest: "priv/static/cache_manifest.json",
   server: true,
   root: ".",
@@ -28,8 +28,9 @@ config :links, LinksWeb.Endpoint,
 config :logger, level: :info
 
 config :links, Links.Mailer,
-  adapter: Bamboo.SendGridAdapter,
-  api_key: System.fetch_env!("SENDGRID_API_KEY")
+  adapter: Bamboo.MandrillAdapter,
+  username: 'S2DD',
+  api_key: System.fetch_env!("MANDRILL_API_KEY")
 
 config :links, ecto_repos: [Links.Repo]
 config :links, login_request_salt: System.fetch_env!("SECRET_KEY_BASE")

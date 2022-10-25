@@ -34,7 +34,7 @@ defmodule Links.CrawlerService do
   def handle_cast({:update_link_location, params}, state) do
     link = Link.find_by_url(params.url)
     params = Map.put(params, :url, params.new_url)
-    Map.delete(params, :new_url)
+    params = Map.delete(params, :new_url)
     Links.LinkMutator.update(link, params)
     {:noreply, state}
   end

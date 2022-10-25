@@ -2,7 +2,7 @@ defmodule Links.LinkMutator do
   require Logger
 
   def update(link, params) do
-    params = for {key, val} <- params, into: %{}, do: {String.to_atom(key), val}
+    params = for {key, val} <- params, is_binary(key), into: %{}, do: {String.to_atom(key), val}
     Links.Link.update(link, params)
   end
 
