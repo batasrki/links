@@ -31,3 +31,4 @@ rel/
 links.code-workspace
 cover/
 .vscode/
+.npm/
