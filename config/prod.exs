@@ -28,9 +28,9 @@ config :links, LinksWeb.Endpoint,
 config :logger, level: :info
 
 config :links, Links.Mailer,
-  adapter: Bamboo.MandrillAdapter,
-  username: 'S2DD',
-  api_key: System.fetch_env!("MANDRILL_API_KEY")
+  adapter: Bamboo.MailgunAdapter,
+  api_key: System.fetch_env!("MAILGUN_API_KEY"),
+  domain: "sandbox48bebf56691b41bebd6a2cdfe6ca7267.mailgun.org"
 
 config :links, ecto_repos: [Links.Repo]
 config :links, login_request_salt: System.fetch_env!("SECRET_KEY_BASE")
