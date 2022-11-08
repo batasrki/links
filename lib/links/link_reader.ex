@@ -56,7 +56,7 @@ defmodule Links.LinkReader do
   def by_id_for_editing(id) do
     try do
       link = Link.find_by_id(String.to_integer(id))
-      Links.Link.update_changeset(link, %{})
+      Links.Link.update_changeset(link, %{categories: Links.Link.serialize(link.categories)})
     rescue
       _e in Ecto.NoResultsError -> {:error, :not_found}
     end

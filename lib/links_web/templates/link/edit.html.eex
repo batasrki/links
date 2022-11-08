@@ -4,7 +4,7 @@
         <li class="nav-item"><a class="nav-link" href="<%= link_path(@conn, :index) %>">Index</a></li>
     </ul>
     <%= form_for @link, link_path(@conn, :update, @link.data.id), [method: :put], fn f -> %>
-        <% if @link.action do %>
+        <%= if @link.action do %>
             <div class="alert alert-danger">
                 There are errors that need correcting.
             </div>
@@ -26,6 +26,14 @@
                 <label for="url">URL</label>
                 <%= url_input f, :url, value: @link.data.url, class: "form-control" %>
                 <%= error_tag f, :url %>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                <label for="categories">Categories</label>
+                <%= text_input f, :categories, class: "form-control" %>
+                <%= error_tag f, :categories %>
             </div>
         </div>
 

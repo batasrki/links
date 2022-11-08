@@ -65,6 +65,7 @@
             </h4>
             <div class="card-text">
               <p>Added at: <%= link.added_at %></p>
+              <p>Categories: <%= categories(link) %></p>
               <small>By: <%= link.client %></small>
               <small><a href="<%= link_path(@conn, :edit, link.id) %>">Edit</a></small>
             </div>

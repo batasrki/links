@@ -1,7 +1,7 @@
 defmodule LinksWeb.LinkController do
   require Logger
   use LinksWeb, :controller
-  alias Links.{LinkReader, LinkMutator, Link}
+  alias Links.{LinkReader, LinkMutator, Link, Category}
 
   def index(conn, params) do
     session = LinksWeb.AuthHelper.logged_in?(conn)
@@ -35,13 +35,14 @@ defmodule LinksWeb.LinkController do
   def edit(conn, params) do
     if LinksWeb.AuthHelper.logged_in?(conn) do
       link = LinkReader.by_id_for_editing(params["id"])
+      categories = Links.Category.all()
 
       case link do
         {:error, :not_found} ->
           conn |> put_status(:not_found) |> render("404.html")
 
         _ ->
-          render(conn, "edit.html", link: link)
+          render(conn, "edit.html", link: link, categories: categories)
       end
     else
       redirect(conn, to: login_request_path(conn, :new))
@@ -56,7 +57,7 @@ defmodule LinksWeb.LinkController do
 
         link ->
           result =
-            LinkMutator.update(link.data, Map.take(params["link"], ["title", "client", "url"]))
+            LinkMutator.update(link.data, Map.take(params["link"], ["title", "client", "url", "categories"]))
 
           case result do
             {:ok, _} ->

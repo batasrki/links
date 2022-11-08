@@ -9,6 +9,7 @@ defmodule Links.Link do
     field(:client, :string)
     field(:added_at, :utc_datetime)
     field(:state, :string)
+    many_to_many(:categories, Links.Category, join_through: "category_links")
     belongs_to(:user, Links.User)
     timestamps(type: :utc_datetime)
   end
@@ -30,7 +31,7 @@ defmodule Links.Link do
     Logger.info(Enum.join(Enum.map(filter_config, fn {k, v} -> "#{k} => #{v}" end), "; "))
     Logger.info(Enum.join(Enum.map(pagination_config, fn {k, v} -> "#{k} => #{v}" end), "; "))
 
-    query |> Links.Repo.all()
+    preload(query, :categories) |> Links.Repo.all()
   end
 
   defp from_config(%{sort_direction: "asc"}) do
@@ -89,11 +90,11 @@ defmodule Links.Link do
   end
 
   def find_by_url(url) do
-    __MODULE__ |> Links.Repo.get_by!(url: url)
+    __MODULE__ |> Links.Repo.get_by!(url: url) |> Links.Repo.preload(:categories)
   end
 
   def find_by_id(id) do
-    __MODULE__ |> Links.Repo.get!(id)
+    __MODULE__ |> Links.Repo.get!(id) |> Links.Repo.preload(:categories)
   end
 
   ## END Queries block ##
@@ -109,6 +110,22 @@ defmodule Links.Link do
     |> validate_required([:url, :client, :title])
     |> validate_format(:url, ~r/^http/)
     |> validate_inclusion(:state, ["active", "archived", "unreachable"])
+    |> put_assoc(:categories, saved_categories(params.categories))
+  end
+
+  defp saved_categories(categories_str) do
+    categories_str
+    |> String.split(",")
+    |> Enum.map(&String.trim/1)
+    |> Enum.reject(& &1 == "")
+    |> Enum.map(fn(name) ->
+      Links.Repo.get_by(Links.Category, name: name) ||
+      Links.Repo.insert!(%Links.Category{name: name})
+    end)
+  end
+
+  def serialize(categories) do
+    categories |> Enum.map_join(",", fn(category) -> category.name end)
   end
 
   def create(params) do

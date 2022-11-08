@@ -11,4 +11,8 @@ defmodule LinksWeb.LinkView do
       false -> ""
     end
   end
+
+  def categories(link) do
+    Links.Link.serialize(link.categories)
+  end
 end
