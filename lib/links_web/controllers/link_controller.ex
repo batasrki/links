@@ -80,7 +80,7 @@ defmodule LinksWeb.LinkController do
           conn |> put_status(:not_found) |> render("404.html")
 
         link ->
-          result = LinkMutator.update(link.data, %{"state" => "archived"})
+          result = LinkMutator.update(link.data, %{"state" => "archived", "categories" => Links.Link.serialize(link.categories)})
 
           case result do
             {:ok, _} ->

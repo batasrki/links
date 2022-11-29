@@ -27,7 +27,8 @@ defmodule Links.TestRepo do
 
     update_params = %{
       url: "http://localhost:8081/test/howto_1.html",
-      client: "test_client"
+      client: "test_client",
+      categories: ""
     }
 
     {:ok, result} = Link.update(link, update_params)
@@ -39,7 +40,8 @@ defmodule Links.TestRepo do
 
     update_params = %{
       url: "garbage",
-      client: "test_client"
+      client: "test_client",
+      categories: ""
     }
 
     {:error, result} = Link.update(link, update_params)
@@ -51,7 +53,8 @@ defmodule Links.TestRepo do
 
     update_params = %{
       url: "",
-      client: "test_client"
+      client: "test_client",
+      categories: ""
     }
 
     {:error, result} = Link.update(link, update_params)
@@ -63,7 +66,8 @@ defmodule Links.TestRepo do
 
     update_params = %{
       title: "Updated title",
-      client: "test_client"
+      client: "test_client",
+      categories: ""
     }
 
     {:ok, result} = Link.update(link, update_params)
@@ -75,11 +79,22 @@ defmodule Links.TestRepo do
 
     update_params = %{
       title: "",
-      client: "test_client"
+      client: "test_client",
+      categories: ""
     }
 
     {:error, result} = Link.update(link, update_params)
     assert {:title, {"can't be blank", [validation: :required]}} in result.errors
+  end
+
+  test "updating a link with categories works" do
+    link = Link.find_by_url("http://localhost:8081/test/howto.html")
+    update_params = %{
+      categories: "howto"
+    }
+
+    {:ok, result} = Link.update(link, update_params)
+    assert "howto" == Enum.map(result.categories, &(&1.name)) |> hd()
   end
 
   test "creating a link works" do
