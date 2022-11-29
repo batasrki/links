@@ -143,7 +143,8 @@ defmodule LinksWeb.LinkControllerTest do
       link = links |> hd()
 
       update_params = %{
-        title: "Updating the seed"
+        title: "Updating the seed",
+        categories: ""
       }
 
       conn =
