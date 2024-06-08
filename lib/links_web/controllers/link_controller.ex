@@ -1,7 +1,7 @@
 defmodule LinksWeb.LinkController do
   require Logger
   use LinksWeb, :controller
-  alias Links.{LinkReader, LinkMutator, Link, Category}
+  alias Links.{LinkReader, LinkMutator, Link}
 
   def index(conn, params) do
     session = LinksWeb.AuthHelper.logged_in?(conn)
@@ -80,7 +80,7 @@ defmodule LinksWeb.LinkController do
           conn |> put_status(:not_found) |> render("404.html")
 
         link ->
-          result = LinkMutator.update(link.data, %{"state" => "archived", "categories" => Links.Link.serialize(link.categories)})
+          result = LinkMutator.update(link.data, %{"state" => "archived", "categories" => Links.Link.serialize(link.data.categories)})
 
           case result do
             {:ok, _} ->

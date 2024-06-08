@@ -4,7 +4,6 @@ defmodule Links.LinkMutator do
   def update(link, params) do
     params = for {key, val} <- params, is_binary(key), into: %{}, do: {String.to_atom(key), val}
     Logger.info(params)
-    IO.puts(params)
     Links.Link.update(link, params)
   end
 

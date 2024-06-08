@@ -68,7 +68,7 @@ defmodule LinksWeb.LinkControllerTest do
         |> put_req_header("content-type", "text/html")
         |> post(Routes.link_path(conn, :create), link: create_params)
 
-      expected_redir_path = "/links?sort_direction=asc&user_id=#{user.id}"
+      expected_redir_path = "/links?user_id=#{user.id}&sort_direction=asc"
 
       assert expected_redir_path == redirected_to(conn, 302)
       conn = get(recycle(conn), expected_redir_path)
@@ -156,7 +156,7 @@ defmodule LinksWeb.LinkControllerTest do
         |> put_req_header("content-type", "text/html")
         |> put(Routes.link_path(conn, :update, link.id), link: update_params)
 
-      expected_redir_path = "/links?sort_direction=asc&user_id=#{user.id}"
+      expected_redir_path = "/links?user_id=#{user.id}&sort_direction=asc"
 
       assert expected_redir_path == redirected_to(conn, 302)
       conn = get(recycle(conn), expected_redir_path)
@@ -202,7 +202,7 @@ defmodule LinksWeb.LinkControllerTest do
         |> put_req_header("content-type", "text/html")
         |> delete(Routes.link_path(conn, :delete, link.id), link: %{})
 
-      expected_redir_path = "/links?sort_direction=asc&user_id=#{user.id}"
+      expected_redir_path = "/links?user_id=#{user.id}&sort_direction=asc"
 
       assert expected_redir_path == redirected_to(conn, 302)
       conn = get(recycle(conn), expected_redir_path)
