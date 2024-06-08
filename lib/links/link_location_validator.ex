@@ -7,16 +7,16 @@ defmodule Links.LinkLocationValidator do
       {:ok, %HTTPoison.Response{status_code: 301, headers: headers}} ->
         Logger.info("Following a 301 redirect for #{link.url}")
         new_location = follow_redirect_with(headers)
-        Link.update(link, %{url: new_location})
+        Link.update(link, %{categories: "", url: new_location})
 
       {:ok, %HTTPoison.Response{status_code: 302, headers: headers}} ->
         Logger.info("Following a 302 redirect for #{link.url}")
         new_location = follow_redirect_with(headers)
-        Link.update(link, %{url: new_location})
+        Link.update(link, %{categories: "", url: new_location})
 
       {:ok, %HTTPoison.Response{status_code: 404}} ->
         Logger.info("Archiving #{link.url} due to dead link")
-        Link.update(link, %{state: "archived"})
+        Link.update(link, %{categories: "", state: "archived"})
 
       {:error, %HTTPoison.Error{reason: reason}} ->
         Logger.error(reason)

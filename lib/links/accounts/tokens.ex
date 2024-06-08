@@ -4,7 +4,7 @@ defmodule Links.Accounts.Tokens do
 
   # 10 minute timeout
   @login_request_max_age 60 * 10
-  @login_request_salt Application.get_env(
+  @login_request_salt Application.compile_env(
                         :links,
                         :login_request_salt,
                         System.fetch_env!("SECRET_KEY_BASE")

@@ -24,12 +24,12 @@ jobs:
           - 5432:5432
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Setup elixir
-      uses: actions/setup-elixir@v1
+      uses: erlef/setup-beam@v1
       with:
-        elixir-version: 1.14.2 # Define the elixir version [required]
-        otp-version: 25.0 # Define the OTP version [required]
+        elixir-version: 1.16.3 # Define the elixir version [required]
+        otp-version: 26.0 # Define the OTP version [required]
         experimental-otp: true # Flag needed for OpenSSL stuff
     - name: Install Dependencies
       run: mix deps.get

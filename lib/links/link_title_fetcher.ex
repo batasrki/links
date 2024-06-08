@@ -18,7 +18,7 @@ defmodule Links.LinkTitleFetcher do
           end
 
         link = Link.find_by_url(params.url)
-        Link.update(link, %{title: title})
+        Link.update(link, %{title: title, categories: ""})
 
         LinksWeb.Endpoint.broadcast!("updates:*", "incoming", %{title: title})
 
@@ -34,7 +34,7 @@ defmodule Links.LinkTitleFetcher do
         Logger.info("Archiving #{params.url} due to dead link")
 
         link = Link.find_by_url(params.url)
-        Link.update(link, %{state: "archived"})
+        Link.update(link, %{state: "archived", categories: ""})
 
       {:error, %HTTPoison.Error{reason: reason}} ->
         Logger.error(reason)

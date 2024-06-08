@@ -55,7 +55,8 @@ defmodule Links.TestLinkMutator do
     %{
       "url" => "http://localhost:8081/test/howto.html",
       "client" => "test client",
-      "title" => "How To Mock a Server"
+      "title" => "How To Mock a Server",
+      "categories" => ""
     }
   end
 
@@ -63,7 +64,8 @@ defmodule Links.TestLinkMutator do
     %{
       "url" => "garbage",
       "client" => "test client",
-      "title" => "How To Mock a Server"
+      "title" => "How To Mock a Server",
+      "categories" => ""
     }
   end
 
