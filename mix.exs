@@ -4,7 +4,7 @@ defmodule Links.Mixfile do
   def project do
     [
       app: :links,
-      version: "0.7.7",
+      version: "0.7.8",
       elixir: "~> 1.13",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix] ++ Mix.compilers(),
@@ -53,7 +53,7 @@ defmodule Links.Mixfile do
       {:ecto_sql, "~>3.0"},
       {:postgrex, "~> 0.15"},
       {:httpoison, "~>1.6"},
-      {:floki, "~> 0.21.0"},
+      {:floki, "~> 0.21"},
       {:jason, "~> 1.0"},
       {:bamboo, "~> 1.4"},
       {:dialyxir, "~> 1.0.0-rc.4", only: [:dev], runtime: false},
