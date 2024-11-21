@@ -1,6 +1,6 @@
 FROM hexpm/elixir:1.14.1-erlang-25.1.2-ubuntu-focal-20211006
 
-ENV REFRESHED_AT=2022-10-25 \
+ENV REFRESHED_AT=2024-11-20 \
   LANG=en_US.UTF-8 \
   HOME=/opt/build \
   TERM=xterm
